@@ -5,7 +5,7 @@
 :root {
   --font-heading: 'Syne', system-ui, sans-serif;
   --font-dialogue: 'Fredoka', system-ui, sans-serif;
-  /* Core palette – high saturation */
+
   --color-magenta: #e040b0;
   --color-cyan: #00d4ff;
   --color-orange: #ff6b35;
@@ -15,25 +15,16 @@
   --color-teal: #06ffa5;
   --color-yellow: #ffea00;
 
-  /* Gradients */
   --gradient-hero: linear-gradient(135deg, var(--color-violet) 0%, var(--color-pink) 40%, var(--color-cyan) 100%);
   --gradient-section-alt: linear-gradient(180deg, var(--color-purple) 0%, var(--color-magenta) 50%, var(--color-orange) 100%);
   --gradient-text: linear-gradient(90deg, var(--color-cyan), var(--color-pink), var(--color-orange));
 
-  /* Layout */
   --section-padding-block: clamp(3rem, 8vw, 6rem);
   --section-padding-inline: clamp(1rem, 5vw, 3rem);
   --content-max-width: 900px;
 
-  /* Motion – respect user preference */
   --motion-duration: 0.4s;
   --motion-ease: ease-in-out;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  :root {
-    --motion-duration: 0.01ms;
-  }
 }
 
 /* ===== Base reset ===== */
@@ -53,12 +44,6 @@ body {
   animation: bgShift 15s ease infinite;
   color: #1a1a1a;
   line-height: 1.5;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body {
-    animation: none;
-  }
 }
 
 @keyframes bgShift {
@@ -99,6 +84,8 @@ body {
   background-position: 0 15%;
   opacity: 0.6;
   filter: grayscale(1);
+  mask-image: linear-gradient(to left, black 0%, transparent 50%);
+  -webkit-mask-image: linear-gradient(to left, black 0%, transparent 50%);
   pointer-events: none;
   transform: scale(0.88) rotateY(6deg);
   transform-origin: 25% center;
@@ -107,18 +94,7 @@ body {
 }
 
 .section.section-visible .section-bg__ghost {
-  opacity: 0.92;
   transform: scale(1.18) rotateY(6deg);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .section-bg {
-    opacity: 0.96;
-  }
-  .section-bg__ghost {
-    opacity: 0.92;
-    transform: scale(1.18) rotateY(6deg);
-  }
 }
 
 .section-inner {
@@ -148,12 +124,6 @@ body {
   background-clip: text;
   filter: drop-shadow(0 0 12px rgba(255, 0, 110, 0.3));
   animation: gradientShift 8s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .section-title {
-    animation: none;
-  }
 }
 
 @keyframes gradientShift {
