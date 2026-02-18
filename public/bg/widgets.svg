@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <rect width="800" height="500" fill="rgba(0,212,255,0.2)"/>
+  <rect x="70" y="55" width="660" height="390" rx="8" fill="rgba(0,0,0,0.18)" stroke="rgba(255,255,255,0.28)" stroke-width="2"/>
+  <text x="400" y="260" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="22" font-family="system-ui,sans-serif">Widgets &amp; demos</text>
+</svg>
