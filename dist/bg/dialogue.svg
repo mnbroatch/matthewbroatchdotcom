@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <rect width="800" height="500" fill="rgba(123,44,191,0.3)"/>
+  <rect x="40" y="40" width="720" height="420" rx="8" fill="rgba(0,0,0,0.2)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+  <text x="400" y="260" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="24" font-family="system-ui,sans-serif">react-dialogue-tree</text>
+</svg>

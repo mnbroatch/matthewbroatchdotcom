@@ -10,10 +10,12 @@
     "deploy": "vite build && ./scripts/deploy.sh"
   },
   "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
+    "board-game-engine-react": "^0.0.8",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-dialogue-tree": "^0.13.0"
+    "react-dialogue-tree": "^0.13.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",

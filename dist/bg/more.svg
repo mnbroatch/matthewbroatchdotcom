@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <rect width="800" height="500" fill="rgba(255,0,110,0.2)"/>
+  <rect x="50" y="45" width="700" height="410" rx="8" fill="rgba(0,0,0,0.15)" stroke="rgba(255,255,255,0.25)" stroke-width="2"/>
+  <text x="400" y="260" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="22" font-family="system-ui,sans-serif">More to come</text>
+</svg>
