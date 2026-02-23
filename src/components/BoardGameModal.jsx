@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
 import Editor from '@monaco-editor/react';
-import { Game, useGameserverConnection } from "board-game-engine-react";
+import * as B from "board-game-engine-react";
+const Game = B.Game
+const useGameserverConnection = B.useGameserverConnection
+console.log('B', B)
+
+console.log('useGameserverConnection', useGameserverConnection)
 
 import ticTacToeRules from "../tic-tac-toe.json";
 
