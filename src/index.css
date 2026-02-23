@@ -61,7 +61,6 @@ body {
   width: 100%;
   padding: var(--section-padding-block) var(--section-padding-inline);
   overflow: hidden;
-  perspective: 1400px;
 }
 
 .section-bg {
@@ -87,14 +86,14 @@ body {
   mask-image: linear-gradient(to left, black 0%, transparent 50%);
   -webkit-mask-image: linear-gradient(to left, black 0%, transparent 50%);
   pointer-events: none;
-  transform: scale(0.88) rotateY(6deg);
+  transform: scale(0.8);
   transform-origin: 25% center;
-  transition: opacity 0.6s var(--motion-ease), transform 0.6s var(--motion-ease);
+  transition: opacity 0.6s var(--motion-ease), transform 0.5s var(--motion-ease);
   z-index: 1;
 }
 
 .section.section-visible .section-bg__ghost {
-  transform: scale(1.18) rotateY(6deg);
+  transform: scale(.9);
 }
 
 .section-inner {
@@ -274,11 +273,13 @@ body {
 /* Dialogue section: wrapper and psychedelic overrides for react-dialogue-tree */
 .section-dialogue .dialogue-tree-wrapper {
   min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* One-message-at-a-time: only current node visible, single bubble layout */
 .section-dialogue .one-message-dialogue .chat-scroller {
-  min-height: 140px;
   display: flex;
   align-items: flex-end;
   background: transparent;
@@ -331,6 +332,9 @@ body {
 .section-dialogue .one-message-node .dialogue-node__option--default,
 .section-dialogue .one-message-node .dialogue-node__option--final {
   padding: 0.6rem 1.25rem;
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
   font-size: 1rem;
   font-weight: 600;
   color: #0a0a0a;
