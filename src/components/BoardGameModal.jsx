@@ -1,10 +1,6 @@
 import { useEffect, useState } from 'react'
 import Editor from '@monaco-editor/react';
-import * as B from "board-game-engine-react";
-const Game = B.Game
-const useGameserverConnection = B.useGameserverConnection
-console.log('B', B)
-console.log('useGameserverConnection', useGameserverConnection)
+import { Game, useGameserverConnection } from "board-game-engine-react";
 
 import ticTacToeRules from "../tic-tac-toe.json";
 
@@ -12,7 +8,7 @@ function BoardGameModal({ isOpen, onClose }) {
   const [isPlaying, setIsPlaying] = useState(false)
 
   const gameConnection = useGameserverConnection({
-    gameRules: ticTacToeRules,
+    gameRules: JSON.stringify(ticTacToeRules),
     numPlayers: 2,
     singlePlayer: true
   })
