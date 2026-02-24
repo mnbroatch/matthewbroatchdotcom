@@ -56,7 +56,7 @@ function BoardGameModal({ isOpen, onClose }) {
           {!isPlaying && <>
             <h2>This Code:</h2>
             <Editor
-              height="500px"
+              height="400px"
               className="editor__input"
               defaultLanguage="json"
               value={JSON.stringify(ticTacToeRules, null, 2)}
