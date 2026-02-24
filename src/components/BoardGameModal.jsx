@@ -4,7 +4,6 @@ import * as B from "board-game-engine-react";
 const Game = B.Game
 const useGameserverConnection = B.useGameserverConnection
 console.log('B', B)
-
 console.log('useGameserverConnection', useGameserverConnection)
 
 import ticTacToeRules from "../tic-tac-toe.json";
