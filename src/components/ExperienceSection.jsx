@@ -19,6 +19,11 @@ function ExperienceSection() {
           </li>
         ))}
       </ul>
+      <div className="section-technical">
+        <p className="section-blurb-technical">
+          Implemented a serverless backend with access granted via AWS Cognito User Pools and OIDC.
+        </p>
+      </div>
     </Section>
   )
 }

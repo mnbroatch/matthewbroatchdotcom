@@ -1,18 +1,21 @@
+import SerpentineBorder from './components/SerpentineBorder'
 import DialogueSection from './components/DialogueSection'
 import ExperienceSection from './components/ExperienceSection'
 import BoardGameSection from './components/BoardGameSection'
-import WidgetsSection from './components/WidgetsSection'
-import MoreSection from './components/MoreSection'
+import ReplyGuyBotSection from './components/ReplyGuyBotSection'
+import MusicSection from './components/MusicSection'
 
 function App() {
   return (
-    <main>
-      <DialogueSection />
-      <BoardGameSection />
-      <WidgetsSection />
-      <MoreSection />
-      <ExperienceSection />
-    </main>
+    <SerpentineBorder>
+      <main>
+        <DialogueSection />
+        <BoardGameSection />
+        <ReplyGuyBotSection />
+        <MusicSection />
+        <ExperienceSection />
+      </main>
+    </SerpentineBorder>
   )
 }
 

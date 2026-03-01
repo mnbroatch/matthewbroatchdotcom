@@ -6,14 +6,20 @@ import ticTacToeRules from "../tic-tac-toe.json";
 
 function BoardGameModal({ isOpen, onClose }) {
   const [isPlaying, setIsPlaying] = useState(false)
+  const [isOver, setIsOver] = useState(false)
 
   const gameConnection = useGameserverConnection({
     gameRules: JSON.stringify(ticTacToeRules),
     numPlayers: 2,
-    singlePlayer: true
+    debug: false,
+    singlePlayer: true,
   })
 
-  console.log('gameConnection', gameConnection)
+  useEffect(() => {
+    if (gameConnection.gameover) {
+      setIsOver(true)
+    }
+  }, [gameConnection.gameover])
 
   useEffect(() => {
     if (!isOpen) return
@@ -62,6 +68,7 @@ function BoardGameModal({ isOpen, onClose }) {
               value={JSON.stringify(ticTacToeRules, null, 2)}
               theme="vs-dark"
               loading={null} 
+              onDialogueEnd={() => {}}
               options={{
                 minimap: { enabled: false },
                 fontSize: 8,
@@ -83,6 +90,25 @@ function BoardGameModal({ isOpen, onClose }) {
             <h2>A Playable Prototype</h2>
             <Game gameConnection={gameConnection} />
           </>}
+          {isOver && (
+            <div className="board-game-end-screen" aria-live="polite">
+              <h2 className="board-game-end-screen__title">Game over</h2>
+              <p className="board-game-end-screen__blurb">
+                This demo was built with the same engine you can use at boardgameengine.com — define rules in a special JSON format, get a playable game and online multiplayer in the browser.
+              </p>
+              <p className="board-game-end-screen__cta-text">
+                Edit this game and play more online:
+              </p>
+              <a
+                href="https://boardgameengine.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="board-game-end-screen__link"
+              >
+                boardgameengine.com
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </div>

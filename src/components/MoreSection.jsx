@@ -12,6 +12,11 @@ function MoreSection() {
       <p className="section-blurb">
         More projects and experiments will show up here as they’re ready.
       </p>
+      <div className="section-technical">
+        <p className="section-blurb-technical">
+          Technical highlights for future projects.
+        </p>
+      </div>
     </Section>
   )
 }

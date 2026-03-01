@@ -8,11 +8,11 @@ function BoardGameSection() {
   return (
     <>
       <Section
-      className="section-board-game"
-      aria-label="Board game engine"
-      backgroundImage="/bg/boardgame.png"
-      backgroundColor="rgba(255, 107, 53, 0.95)"
-    >
+        className="section-board-game"
+        aria-label="Board game engine"
+        backgroundImage="/bg/boardgame.png"
+        backgroundColor="rgba(255, 107, 53, 0.95)"
+      >
         <h2 className="section-title">Board game engine</h2>
         <p className="board-game-blurb">
           A custom engine for building and testing board games. Rules, pieces, and boards — all in one place.
@@ -24,6 +24,11 @@ function BoardGameSection() {
         >
           Open editor
         </button>
+        <div className="section-technical">
+          <p className="section-blurb-technical">
+            JSON rules engine, real-time multiplayer, board-game-engine-react.
+          </p>
+        </div>
       </Section>
       <BoardGameModal
         isOpen={isBoardGameOpen}

@@ -6,6 +6,13 @@
   --font-heading: 'Syne', system-ui, sans-serif;
   --font-dialogue: 'Fredoka', system-ui, sans-serif;
 
+  /* CSS HEX */
+  --night-bordeaux: #561d25ff;
+  --golden-chestnut: #ce8147ff;
+  --light-gold: #ecdd7bff;
+  --tropical-teal: #68b0abff;
+  --blue-slate: #696d7dff;
+
   --color-magenta: #e040b0;
   --color-cyan: #00d4ff;
   --color-orange: #ff6b35;
@@ -55,7 +62,34 @@ body {
   min-height: 100vh;
 }
 
-/* ===== Section layout ===== */
+/* ===== Serpentine border (single SVG overlay) ===== */
+.serpentine-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.serpentine-triangles-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 1;
+}
+
+.serpentine-border-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 10;
+}
+
 .section {
   position: relative;
   width: 100%;
@@ -66,7 +100,7 @@ body {
 .section-bg {
   position: absolute;
   inset: 0;
-  z-index: 0;
+  /* z-index: 0; */
   transform-style: preserve-3d;
   opacity: 0.72;
   transition: opacity 0.6s var(--motion-ease);
@@ -74,6 +108,10 @@ body {
 
 .section.section-visible .section-bg {
   opacity: 0.96;
+}
+
+.section-dialogue .section-bg {
+  opacity: 1;
 }
 
 .section-bg__ghost {
@@ -89,7 +127,7 @@ body {
   transform: scale(0.8);
   transform-origin: 25% center;
   transition: opacity 0.6s var(--motion-ease), transform 0.5s var(--motion-ease);
-  z-index: 1;
+  /* z-index: 1; */
 }
 
 .section.section-visible .section-bg__ghost {
@@ -98,7 +136,7 @@ body {
 
 .section-inner {
   position: relative;
-  z-index: 1;
+  /* z-index: 2; */
   max-width: var(--content-max-width);
   margin-inline: auto;
 }
@@ -109,7 +147,51 @@ body {
   color: rgba(255, 255, 255, 0.95);
 }
 
-/* Section title (shared) – gradient text + glow */
+.section-technical {
+  margin-top: auto;
+  margin-bottom: 0;
+  padding: 1rem 1.25rem;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+}
+
+.section-blurb-technical {
+  margin: 0;
+  max-width: 50ch;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-style: italic;
+}
+
+.section-blurb-technical a {
+  color: var(--color-teal);
+  text-decoration: none;
+}
+
+.section-blurb-technical a:hover {
+  text-decoration: underline;
+}
+
+.section-technical-links {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  font-style: normal;
+}
+
+.section-technical-links a {
+  color: var(--color-teal);
+  text-decoration: none;
+}
+
+.section-technical-links a:hover {
+  text-decoration: underline;
+}
+
+.dialogue-section-end {
+  width: 100%;
+}
+
+/* Section title (shared) – gradient text + glow, readable over any section bg */
 .section-title {
   margin: 0 0 1.5rem;
   font-size: clamp(1.5rem, 4vw, 2rem);
@@ -121,8 +203,33 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 0 12px rgba(255, 0, 110, 0.3));
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 14px rgba(255, 255, 255, 0.15));
   animation: gradientShift 8s ease-in-out infinite;
+}
+
+/* Gradient colors chosen to contrast with each section’s background (no background on title) */
+.section-board-game .section-title {
+  background-image: linear-gradient(90deg, var(--color-cyan), var(--color-pink), var(--color-teal));
+}
+
+.section-widgets .section-title {
+  background-image: linear-gradient(90deg, var(--color-pink), var(--color-orange), var(--color-yellow));
+}
+
+.section-reply-guy-bot .section-title {
+  background-image: linear-gradient(90deg, var(--color-pink), var(--color-orange), var(--color-yellow));
+}
+
+.section-more .section-title {
+  background-image: linear-gradient(90deg, var(--color-cyan), var(--color-teal), var(--color-yellow));
+}
+
+.section-music .section-title {
+  background-image: linear-gradient(90deg, var(--color-cyan), var(--color-teal), var(--color-yellow));
+}
+
+.section-experience .section-title {
+  background-image: linear-gradient(90deg, var(--color-teal), var(--color-yellow), var(--color-cyan));
 }
 
 @keyframes gradientShift {
@@ -186,6 +293,25 @@ body {
 }
 
 .board-game-modal-cta,
+.section-cta-link {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.6rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0a0a0a;
+  background: var(--color-teal);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background var(--motion-duration) var(--motion-ease),
+    transform var(--motion-duration) var(--motion-ease);
+}
+
+.section-cta-link:hover {
+  background: var(--color-cyan);
+  transform: translateY(-1px);
+}
+
 .board-game-cta {
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
@@ -237,6 +363,7 @@ body {
   padding: 0;
   font-size: 1.5rem;
   line-height: 1;
+  z-index: 10;
   color: #fff;
   background: transparent;
   border: none;
@@ -386,4 +513,65 @@ body {
 .section-dialogue .dialogue-tree .dialogue-tree__node-spacer:last-of-type .dialogue-node-choices__choice:active {
   background: var(--color-violet);
   color: #fff;
+}
+
+.board-game-end-screen {
+  position: absolute;
+  inset: 0;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 3rem 1.5rem 1.5rem;
+  background: #1a1a2e;
+  opacity: 0;
+  animation: board-game-end-fade 0.5s ease 0.5s forwards;
+  pointer-events: auto;
+}
+
+@keyframes board-game-end-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.board-game-end-screen__title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.board-game-end-screen__blurb {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  text-align: center;
+  max-width: 36ch;
+}
+
+.board-game-end-screen__cta-text {
+  margin: 0.5rem 0 0;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.9rem;
+}
+
+.board-game-end-screen__link {
+  display: inline-block;
+  margin-top: 0.25rem;
+  padding: 0.6rem 1.25rem;
+  color: #0a0a0a;
+  font-weight: 600;
+  text-decoration: none;
+  background: var(--color-teal);
+  border-radius: 8px;
+  transition: background var(--motion-duration) var(--motion-ease),
+    transform var(--motion-duration) var(--motion-ease);
+}
+
+.board-game-end-screen__link:hover {
+  background: var(--color-cyan);
+  transform: translateY(-1px);
 }
