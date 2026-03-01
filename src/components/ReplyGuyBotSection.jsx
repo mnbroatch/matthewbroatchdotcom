@@ -8,7 +8,7 @@ function ReplyGuyBotSection() {
       className="section-reply-guy-bot"
       aria-label="Reply-guy bot"
       backgroundImage="/bg/widgets.svg"
-      backgroundColor="rgba(0, 212, 255, 0.94)"
+      backgroundColor="var(--cherry-rose)"
     >
       <h2 className="section-title">reddit reply-guy-bot</h2>
       <p className="section-blurb">

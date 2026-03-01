@@ -6,7 +6,7 @@ function MoreSection() {
       className="section-more"
       aria-label="More"
       backgroundImage="/bg/more.svg"
-      backgroundColor="rgba(255, 0, 110, 0.94)"
+      backgroundColor="var(--burnt-caramel)"
     >
       <h2 className="section-title">More to come</h2>
       <p className="section-blurb">

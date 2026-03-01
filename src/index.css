@@ -1,37 +1,29 @@
 /* ===== Typography ===== */
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Syne:wght@400;600;700&display=swap');
 
-/* ===== CSS custom properties (psychedelic theme) ===== */
+/* ===== CSS custom properties ===== */
 :root {
   --font-heading: 'Syne', system-ui, sans-serif;
   --font-dialogue: 'Fredoka', system-ui, sans-serif;
 
   /* CSS HEX */
-  --night-bordeaux: #561d25ff;
-  --golden-chestnut: #ce8147ff;
-  --light-gold: #ecdd7bff;
-  --tropical-teal: #68b0abff;
-  --blue-slate: #696d7dff;
+  --slate-indigo: #6369d1ff;
+  --pearl-aqua: #60e1e0ff;
+  --lavender: #d8d2e1ff;
+  --rosy-taupe: #b88e8dff;
+  --twilight-indigo: #34435eff;
 
-  --color-magenta: #e040b0;
-  --color-cyan: #00d4ff;
-  --color-orange: #ff6b35;
-  --color-purple: #9d4edd;
-  --color-pink: #ff006e;
-  --color-violet: #7b2cbf;
-  --color-teal: #06ffa5;
-  --color-yellow: #ffea00;
-
-  --gradient-hero: linear-gradient(135deg, var(--color-violet) 0%, var(--color-pink) 40%, var(--color-cyan) 100%);
-  --gradient-section-alt: linear-gradient(180deg, var(--color-purple) 0%, var(--color-magenta) 50%, var(--color-orange) 100%);
-  --gradient-text: linear-gradient(90deg, var(--color-cyan), var(--color-pink), var(--color-orange));
+  /* Section palette */
+  --cherry-rose: #a4243bff;
+  --sand: #d8c99bff;
+  --golden-apricot: #d8973cff;
+  --burnt-caramel: #bd632fff;
+  --charcoal-blue: #273e47ff;
 
   --section-padding-block: clamp(3rem, 8vw, 6rem);
   --section-padding-inline: clamp(1rem, 5vw, 3rem);
+  --serpentine-clearance: 40px;
   --content-max-width: 900px;
-
-  --motion-duration: 0.4s;
-  --motion-ease: ease-in-out;
 }
 
 /* ===== Base reset ===== */
@@ -45,38 +37,26 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: system-ui, -apple-system, sans-serif;
-  background: var(--gradient-hero);
-  background-attachment: fixed;
-  background-size: 200% 200%;
-  animation: bgShift 15s ease infinite;
+  background: var(--charcoal-blue);
   color: #1a1a1a;
   line-height: 1.5;
-}
-
-@keyframes bgShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
 }
 
 #root {
   min-height: 100vh;
 }
 
+main {
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+}
+
 /* ===== Serpentine border (single SVG overlay) ===== */
 .serpentine-wrapper {
   position: relative;
-  width: 100%;
-}
-
-.serpentine-triangles-svg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  overflow: visible;
-  z-index: 1;
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
 }
 
 .serpentine-border-svg {
@@ -93,7 +73,7 @@ body {
 .section {
   position: relative;
   width: 100%;
-  padding: var(--section-padding-block) var(--section-padding-inline);
+  padding: var(--section-padding-block) max(var(--section-padding-inline), var(--serpentine-clearance));
   overflow: hidden;
 }
 
@@ -102,11 +82,6 @@ body {
   inset: 0;
   /* z-index: 0; */
   transform-style: preserve-3d;
-  opacity: 0.72;
-  transition: opacity 0.6s var(--motion-ease);
-}
-
-.section.section-visible .section-bg {
   opacity: 0.96;
 }
 
@@ -118,20 +93,13 @@ body {
   position: absolute;
   inset: -25%;
   background-size: cover;
-  background-position: 0 15%;
-  opacity: 0.6;
+  background-position: 100% 15%;
+  opacity: 0.5;
   filter: grayscale(1);
-  mask-image: linear-gradient(to left, black 0%, transparent 50%);
-  -webkit-mask-image: linear-gradient(to left, black 0%, transparent 50%);
   pointer-events: none;
   transform: scale(0.8);
-  transform-origin: 25% center;
-  transition: opacity 0.6s var(--motion-ease), transform 0.5s var(--motion-ease);
+  transform-origin: right center;
   /* z-index: 1; */
-}
-
-.section.section-visible .section-bg__ghost {
-  transform: scale(.9);
 }
 
 .section-inner {
@@ -164,7 +132,7 @@ body {
 }
 
 .section-blurb-technical a {
-  color: var(--color-teal);
+  color: var(--pearl-aqua);
   text-decoration: none;
 }
 
@@ -179,7 +147,7 @@ body {
 }
 
 .section-technical-links a {
-  color: var(--color-teal);
+  color: var(--pearl-aqua);
   text-decoration: none;
 }
 
@@ -191,50 +159,14 @@ body {
   width: 100%;
 }
 
-/* Section title (shared) – gradient text + glow, readable over any section bg */
+/* Section title (shared) – readable over any section bg */
 .section-title {
   margin: 0 0 1.5rem;
   font-size: clamp(1.5rem, 4vw, 2rem);
   font-family: var(--font-heading);
   font-weight: 700;
-  color: var(--color-pink);
-  background: var(--gradient-text);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 14px rgba(255, 255, 255, 0.15));
-  animation: gradientShift 8s ease-in-out infinite;
-}
-
-/* Gradient colors chosen to contrast with each section’s background (no background on title) */
-.section-board-game .section-title {
-  background-image: linear-gradient(90deg, var(--color-cyan), var(--color-pink), var(--color-teal));
-}
-
-.section-widgets .section-title {
-  background-image: linear-gradient(90deg, var(--color-pink), var(--color-orange), var(--color-yellow));
-}
-
-.section-reply-guy-bot .section-title {
-  background-image: linear-gradient(90deg, var(--color-pink), var(--color-orange), var(--color-yellow));
-}
-
-.section-more .section-title {
-  background-image: linear-gradient(90deg, var(--color-cyan), var(--color-teal), var(--color-yellow));
-}
-
-.section-music .section-title {
-  background-image: linear-gradient(90deg, var(--color-cyan), var(--color-teal), var(--color-yellow));
-}
-
-.section-experience .section-title {
-  background-image: linear-gradient(90deg, var(--color-teal), var(--color-yellow), var(--color-cyan));
-}
-
-@keyframes gradientShift {
-  0%, 100% { background-position: 0% center; }
-  50% { background-position: 100% center; }
+  color: #fff;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
 }
 
 /* Experience grid */
@@ -258,13 +190,10 @@ body {
   border-radius: 12px;
   text-decoration: none;
   color: inherit;
-  transition: background-color var(--motion-duration) var(--motion-ease),
-    transform var(--motion-duration) var(--motion-ease);
 }
 
 .experience-card__link:hover {
   background: rgba(255, 255, 255, 0.25);
-  transform: translateY(-2px);
 }
 
 .experience-card__logo {
@@ -300,16 +229,13 @@ body {
   font-size: 1rem;
   font-weight: 600;
   color: #0a0a0a;
-  background: var(--color-teal);
+  background: var(--pearl-aqua);
   border-radius: 8px;
   text-decoration: none;
-  transition: background var(--motion-duration) var(--motion-ease),
-    transform var(--motion-duration) var(--motion-ease);
 }
 
 .section-cta-link:hover {
-  background: var(--color-cyan);
-  transform: translateY(-1px);
+  background: var(--lavender);
 }
 
 .board-game-cta {
@@ -317,17 +243,14 @@ body {
   font-size: 1rem;
   font-weight: 600;
   color: #0a0a0a;
-  background: var(--color-teal);
+  background: var(--pearl-aqua);
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color var(--motion-duration) var(--motion-ease),
-    transform var(--motion-duration) var(--motion-ease);
 }
 
 .board-game-cta:hover {
-  background: var(--color-cyan);
-  transform: scale(1.02);
+  background: var(--lavender);
 }
 
 /* Modal */
@@ -340,18 +263,16 @@ body {
   justify-content: center;
   padding: 1rem;
   z-index: 1000;
-  animation: fadeIn var(--motion-duration) var(--motion-ease);
 }
 
 .modal-content {
   position: relative;
-  background: linear-gradient(145deg, var(--color-violet), var(--color-purple));
+  background: var(--slate-indigo);
   border-radius: 16px;
   padding: 1rem;
   max-width: 480px;
   width: 100%;
-  box-shadow: 0 0 40px rgba(157, 78, 221, 0.5);
-  animation: scaleIn var(--motion-duration) var(--motion-ease);
+  box-shadow: 0 0 40px rgba(52, 67, 94, 0.5);
 }
 
 .modal-close {
@@ -369,7 +290,6 @@ body {
   border: none;
   cursor: pointer;
   border-radius: 4px;
-  transition: background-color var(--motion-duration) var(--motion-ease);
 }
 
 .modal-close:hover {
@@ -384,16 +304,6 @@ body {
 .modal-placeholder__hint {
   font-size: 0.9rem;
   opacity: 0.85;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
 }
 
 /* Dialogue section: wrapper and psychedelic overrides for react-dialogue-tree */
@@ -464,24 +374,16 @@ body {
   font-size: 1rem;
   font-weight: 600;
   color: #0a0a0a;
-  background: linear-gradient(180deg, var(--color-teal), var(--color-cyan));
+  background: var(--pearl-aqua);
   border: none;
   border-radius: 8px;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  transition: transform var(--motion-duration) var(--motion-ease),
-    box-shadow var(--motion-duration) var(--motion-ease);
 }
 
 .section-dialogue .one-message-node .dialogue-node__option--default:hover,
 .section-dialogue .one-message-node .dialogue-node__option--final:hover {
-  box-shadow: 0 4px 14px rgba(6, 255, 165, 0.4);
-  transform: translateY(-1px);
-}
-
-.section-dialogue .one-message-node .dialogue-node__option--default:active,
-.section-dialogue .one-message-node .dialogue-node__option--final:active {
-  transform: translateY(0);
+  box-shadow: 0 4px 14px rgba(96, 225, 224, 0.4);
 }
 
 .section-dialogue .dialogue-tree .chat-scroller {
@@ -500,18 +402,16 @@ body {
 
 .section-dialogue .dialogue-tree .dialogue-node-choices__choice {
   border-radius: 8px;
-  transition: background-color var(--motion-duration) var(--motion-ease),
-    box-shadow var(--motion-duration) var(--motion-ease);
 }
 
 .section-dialogue .dialogue-tree .dialogue-tree__node-spacer:last-of-type .dialogue-node-choices__choice:hover {
-  background: linear-gradient(90deg, var(--color-cyan), var(--color-teal));
+  background: var(--pearl-aqua);
   color: #0a0a0a;
-  box-shadow: 0 0 12px rgba(6, 255, 165, 0.4);
+  box-shadow: 0 0 12px rgba(96, 225, 224, 0.4);
 }
 
 .section-dialogue .dialogue-tree .dialogue-tree__node-spacer:last-of-type .dialogue-node-choices__choice:active {
-  background: var(--color-violet);
+  background: var(--charcoal-blue);
   color: #fff;
 }
 
@@ -526,14 +426,7 @@ body {
   gap: 1rem;
   padding: 3rem 1.5rem 1.5rem;
   background: #1a1a2e;
-  opacity: 0;
-  animation: board-game-end-fade 0.5s ease 0.5s forwards;
   pointer-events: auto;
-}
-
-@keyframes board-game-end-fade {
-  from { opacity: 0; }
-  to { opacity: 1; }
 }
 
 .board-game-end-screen__title {
@@ -565,13 +458,10 @@ body {
   color: #0a0a0a;
   font-weight: 600;
   text-decoration: none;
-  background: var(--color-teal);
+  background: var(--pearl-aqua);
   border-radius: 8px;
-  transition: background var(--motion-duration) var(--motion-ease),
-    transform var(--motion-duration) var(--motion-ease);
 }
 
 .board-game-end-screen__link:hover {
-  background: var(--color-cyan);
-  transform: translateY(-1px);
+  background: var(--lavender);
 }

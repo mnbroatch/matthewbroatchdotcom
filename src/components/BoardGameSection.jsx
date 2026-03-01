@@ -11,7 +11,7 @@ function BoardGameSection() {
         className="section-board-game"
         aria-label="Board game engine"
         backgroundImage="/bg/boardgame.png"
-        backgroundColor="rgba(255, 107, 53, 0.95)"
+        backgroundColor="var(--charcoal-blue)"
       >
         <h2 className="section-title">Board game engine</h2>
         <p className="board-game-blurb">

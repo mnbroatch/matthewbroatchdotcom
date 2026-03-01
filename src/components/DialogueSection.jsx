@@ -16,7 +16,7 @@ function DialogueSection() {
       className="section-dialogue"
       aria-label="Welcome dialogue"
       animateOnScroll={false}
-      backgroundColor="#7b2cbf"
+      backgroundColor="var(--sand)"
     >
       {!dialogueEnded ? (
         <div className="dialogue-tree-wrapper one-message-dialogue">

@@ -8,7 +8,7 @@ function MusicSection() {
       className="section-music"
       aria-label="Music"
       backgroundImage="/bg/more.svg"
-      backgroundColor="rgba(255, 0, 110, 0.94)"
+      backgroundColor="var(--golden-apricot)"
     >
       <h2 className="section-title">Music</h2>
       <p className="section-blurb">

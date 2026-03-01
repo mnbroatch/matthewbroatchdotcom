@@ -6,7 +6,7 @@ function WidgetsSection() {
       className="section-widgets"
       aria-label="Widgets and demos"
       backgroundImage="/bg/widgets.svg"
-      backgroundColor="rgba(0, 212, 255, 0.94)"
+      backgroundColor="var(--sand)"
     >
       <h2 className="section-title">Widgets & demos</h2>
       <p className="section-blurb">

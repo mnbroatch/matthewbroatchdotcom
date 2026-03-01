@@ -6,6 +6,7 @@ function ExperienceSection() {
     <Section
       className="section-experience"
       aria-label="Work experience"
+      backgroundColor="var(--charcoal-blue)"
     >
       <h2 className="section-title">Work</h2>
       <ul className="experience-grid">
