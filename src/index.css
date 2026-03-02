@@ -6,7 +6,9 @@
   --font-heading: 'Syne', system-ui, sans-serif;
   --font-dialogue: 'Fredoka', system-ui, sans-serif;
 
-  /* CSS HEX */
+  --page-background: #437db0;
+
+  /* serpentine border colors */
   --slate-indigo: #6369d1ff;
   --pearl-aqua: #60e1e0ff;
   --lavender: #d8d2e1ff;
@@ -24,6 +26,8 @@
   --section-padding-inline: clamp(1rem, 5vw, 3rem);
   --serpentine-clearance: 40px;
   --content-max-width: 900px;
+  /* Space for serpentine border overflow on small screens (match BORDER_EXTRA/2 in SerpentineBorder.jsx) */
+  --serpentine-border-overflow: 20px;
 }
 
 /* ===== Base reset ===== */
@@ -37,9 +41,19 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: system-ui, -apple-system, sans-serif;
-  background: var(--charcoal-blue);
+  background: var(--page-background);
   color: #1a1a1a;
   line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  html,
+  body {
+    overflow-x: visible;
+  }
+  body {
+    padding-inline: var(--serpentine-border-overflow);
+  }
 }
 
 #root {
@@ -342,6 +356,10 @@ main {
 .section-dialogue .one-message-node {
   width: 100%;
   max-width: 420px;
+}
+
+.section-dialogue {
+  transform: translateY(2px);
 }
 
 /* Large, centered dialogue text – white, fun thick font */

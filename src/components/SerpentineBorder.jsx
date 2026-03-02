@@ -3,12 +3,16 @@ import { useEffect, useRef, useState } from 'react'
 const N = 5
 const STROKE_WIDTH = 5
 const R = 28
+/* Extend path right so stroke reaches section edge (viewBox maps W+2.5 to pixel edge) */
+const RIGHT_EXTEND = STROKE_WIDTH / 2
+const BORDER_EXTRA = 40 /* border is this many px wider than sections (5px each side) */
 const COLORS = ['#561d25', '#ce8147', '#ecdd7b', '#68b0ab', '#696d7d']
 
 function buildPathD(W, Y) {
   const n = Y.length - 1
   if (n < 1 || W <= 0) return ''
 
+  const Wr = W + RIGHT_EXTEND
   const parts = []
   for (let i = 0; i < N; i++) {
     const o = i * STROKE_WIDTH
@@ -16,7 +20,7 @@ function buildPathD(W, Y) {
     if (r <= 0) continue
 
     const segs = [
-      `M ${W} ${o}`,
+      `M ${Wr} ${o}`,
       `L ${R} ${o}`,
       `A ${r} ${r} 0 0 0 ${o} ${R}`,
     ]
@@ -27,12 +31,12 @@ function buildPathD(W, Y) {
       if (t % 2 === 0) {
         segs.push(`L ${o} ${yCurr - R}`)
         segs.push(`A ${r} ${r} 0 0 0 ${R} ${yCurr - o}`)
-        segs.push(`L ${W - o - R} ${yCurr - o}`)
-        segs.push(`A ${R} ${R} 0 0 1 ${W - o} ${yCurr - o + R}`)
-        segs.push(`L ${W - o} ${yNext - R}`)
+        segs.push(`L ${Wr - o - R} ${yCurr - o}`)
+        segs.push(`A ${R} ${R} 0 0 1 ${Wr - o} ${yCurr - o + R}`)
+        segs.push(`L ${Wr - o} ${yNext - R}`)
       } else {
-        segs.push(`L ${W - o} ${yCurr - R}`)
-        segs.push(`A ${r} ${r} 0 0 1 ${W - R} ${yCurr - o}`)
+        segs.push(`L ${Wr - o} ${yCurr - R}`)
+        segs.push(`A ${r} ${r} 0 0 1 ${Wr - R} ${yCurr - o}`)
         segs.push(`L ${o + R} ${yCurr - o}`)
         segs.push(`A ${R} ${R} 0 0 0 ${o} ${yCurr - o + R}`)
         segs.push(`L ${o} ${yNext - R}`)
@@ -41,7 +45,7 @@ function buildPathD(W, Y) {
 
     const lastY = Y[n]
     if ((n - 2) % 2 === 0) {
-      segs.push(`L ${W - o} ${lastY}`)
+      segs.push(`L ${Wr - o} ${lastY}`)
     } else {
       segs.push(`L ${o} ${lastY}`)
     }
@@ -72,8 +76,9 @@ function SerpentineBorder({ children }) {
         Y.push((r.top - rect.top) + r.height)
       }
       const totalHeight = Y[Y.length - 1]
-      setDimensions({ width: W, height: totalHeight })
-      setPaths(buildPathD(W, Y))
+      const borderWidth = W + BORDER_EXTRA
+      setDimensions({ width: borderWidth, height: totalHeight })
+      setPaths(buildPathD(borderWidth, Y))
     }
 
     measure()
@@ -89,7 +94,11 @@ function SerpentineBorder({ children }) {
       {dimensions.width > 0 && dimensions.height > 0 && (
         <svg
             className="serpentine-border-svg"
-            viewBox={`${-STROKE_WIDTH / 2} ${-STROKE_WIDTH / 2} ${dimensions.width + STROKE_WIDTH} ${dimensions.height + STROKE_WIDTH}`}
+            style={{
+              width: `calc(100% + ${BORDER_EXTRA}px)`,
+              left: -BORDER_EXTRA / 2,
+            }}
+            viewBox={`${-STROKE_WIDTH / 2} ${-STROKE_WIDTH / 2} ${dimensions.width + STROKE_WIDTH * 1.5} ${dimensions.height + STROKE_WIDTH * 1.5}`}
             preserveAspectRatio="none"
             aria-hidden="true"
           >
