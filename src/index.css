@@ -25,7 +25,7 @@
   --section-padding-block: clamp(3rem, 8vw, 6rem);
   --section-padding-inline: clamp(1rem, 5vw, 3rem);
   --serpentine-clearance: 40px;
-  --content-max-width: 900px;
+  --content-max-width: 1000px;
   /* Space for serpentine border overflow on small screens (match BORDER_EXTRA/2 in SerpentineBorder.jsx) */
   --serpentine-border-overflow: 20px;
 }
@@ -49,7 +49,7 @@ body {
 @media (max-width: 768px) {
   html,
   body {
-    overflow-x: visible;
+    overflow-x: hidden;
   }
   body {
     padding-inline: var(--serpentine-border-overflow);
@@ -89,6 +89,7 @@ main {
   width: 100%;
   padding: var(--section-padding-block) max(var(--section-padding-inline), var(--serpentine-clearance));
   overflow: hidden;
+  color: #fff;
 }
 
 .section-bg {
@@ -179,7 +180,6 @@ main {
   font-size: clamp(1.5rem, 4vw, 2rem);
   font-family: var(--font-heading);
   font-weight: 700;
-  color: #fff;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
 }
 
@@ -230,6 +230,11 @@ main {
 }
 
 /* Board game section */
+.section-board-game .section-bg__ghost {
+  inset: 0;
+  transform: none;
+}
+
 .board-game-blurb {
   margin: 0 0 1rem;
   max-width: 42ch;
@@ -358,8 +363,8 @@ main {
   max-width: 420px;
 }
 
-.section-dialogue {
-  transform: translateY(2px);
+.section-dialogue .section-bg {
+  /* transform: translateY(15px); */
 }
 
 /* Large, centered dialogue text – white, fun thick font */

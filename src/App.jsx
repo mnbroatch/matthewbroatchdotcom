@@ -9,10 +9,13 @@ function App() {
   return (
     <SerpentineBorder>
       <main>
-        <div className="section" style={{padding: 0, height: '100px'}} ></div>
         <DialogueSection />
         <BoardGameSection />
         <ReplyGuyBotSection />
+        <MusicSection />
+        <MusicSection />
+        <MusicSection />
+        <MusicSection />
         <MusicSection />
         <MusicSection />
         <MusicSection />

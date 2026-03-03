@@ -1,11 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 const N = 5
-const STROKE_WIDTH = 5
-const R = 28
+const STROKE_WIDTH = 8
+const R = 50
+const R1 = STROKE_WIDTH * (N - 1)
 const RIGHT_EXTEND = STROKE_WIDTH / 2
-const BORDER_EXTRA = 40
+const BORDER_EXTRA = 70
 const COLORS = ['#561d25', '#ce8147', '#ecdd7b', '#68b0ab', '#696d7d']
 const O_TOTAL = (N - 1) * STROKE_WIDTH  // total spread of all stripes
+const BORDER_WIDTH = STROKE_WIDTH * N   // full border thickness
+const TOP_OFFSET = BORDER_WIDTH - 1.5 * STROKE_WIDTH  // vertical shift so border kisses top (overshoot corrected)
+// Shift so the horizontal band at each turn is centered on the section junction (yCurr)
+const Y_OFFSET = O_TOTAL / 2
 
 function buildPathD(W, Y) {
   const n = Y.length - 1
@@ -18,41 +23,46 @@ function buildPathD(W, Y) {
     const oj = j * STROKE_WIDTH
     const r  = R - o   // radius when stripe i is the outer/reference stripe
     const rj = R - oj  // radius when stripe i is the inner/flipped stripe
+    const r1  = R1 - o   // radius when stripe i is the outer/reference stripe
+    const rj1 = R1 - oj  // radius when stripe i is the inner/flipped stripe
     if (r <= 0 || rj <= 0) continue
 
     // yExit: the y-coordinate where arc-2 exits at each turn
     // Derived: cy = yCurr + R - O_TOTAL (fixed for all stripes at any turn)
     // so exit y = cy = yCurr + R - O_TOTAL
 
+    const yCurrTop = O_TOTAL + Y_OFFSET
     const segs = [
-      `M ${Wr + BORDER_EXTRA * 2} ${o}`,
-      `L ${R} ${o}`,
-      `A ${r} ${r} 0 0 0 ${o} ${R}`,   // initial LEFTDOWN, center (R,R), r=R-o
+      `M ${Wr - oj} ${yCurrTop - R1 - STROKE_WIDTH / 2}`,
+      `L ${Wr - oj} ${yCurrTop - R1}`,
+      `A ${rj1} ${rj1} 0 0 1 ${Wr - R1} ${yCurrTop - oj}`,
+      `L ${R} ${o + Y_OFFSET}`,
+      `A ${r} ${r} 0 0 0 ${o} ${R + Y_OFFSET}`,
     ]
 
     for (let t = 0; t < n - 1; t++) {
       const yCurr = Y[t + 1]
       const yNext = Y[t + 2]
-      const yExit = yCurr + R - O_TOTAL  // fixed exit y for arc-2 of this turn
+      const yExit = yCurr + R - O_TOTAL + Y_OFFSET  // fixed exit y for arc-2 of this turn
 
       if (t % 2 === 0) {
         // Even turn: left vertical (x=o)  right vertical (x=Wr-oj)
-        segs.push(`L ${o} ${yCurr - R}`)
-        segs.push(`A ${r}  ${r}  0 0 0 ${R}      ${yCurr - o}`)   // DOWNRIGHT, center (R, yCurr-R)
-        segs.push(`L ${Wr - R} ${yCurr - o}`)
+        segs.push(`L ${o} ${yCurr - R + Y_OFFSET}`)
+        segs.push(`A ${r}  ${r}  0 0 0 ${R}      ${yCurr - o + Y_OFFSET}`)   // DOWNRIGHT, center (R, yCurr-R)
+        segs.push(`L ${Wr - R} ${yCurr - o + Y_OFFSET}`)
         segs.push(`A ${rj} ${rj} 0 0 1 ${Wr - oj} ${yExit}`)      // RIGHTDOWN, center (Wr-R, yExit)
-        segs.push(`L ${Wr - oj} ${yNext - R}`)
+        segs.push(`L ${Wr - oj} ${yNext - R + Y_OFFSET}`)
       } else {
         // Odd turn: right vertical (x=Wr-oj)  left vertical (x=o)
-        segs.push(`L ${Wr - oj} ${yCurr - R}`)
-        segs.push(`A ${rj} ${rj} 0 0 1 ${Wr - R} ${yCurr - oj}`)  // DOWNLEFT,  center (Wr-R, yCurr-R)
-        segs.push(`L ${R} ${yCurr - oj}`)
+        segs.push(`L ${Wr - oj} ${yCurr - R + Y_OFFSET}`)
+        segs.push(`A ${rj} ${rj} 0 0 1 ${Wr - R} ${yCurr - oj + Y_OFFSET}`)  // DOWNLEFT,  center (Wr-R, yCurr-R)
+        segs.push(`L ${R} ${yCurr - oj + Y_OFFSET}`)
         segs.push(`A ${r}  ${r}  0 0 0 ${o}      ${yExit}`)        // LEFTDOWN,  center (R, yExit)
-        segs.push(`L ${o} ${yNext - R}`)
+        segs.push(`L ${o} ${yNext - R + Y_OFFSET}`)
       }
     }
 
-    const lastY = Y[n]
+    const lastY = Y[n] + Y_OFFSET
     if ((n - 2) % 2 === 0) {
       segs.push(`L ${Wr - oj} ${lastY}`)  // ended on right vertical
     } else {
@@ -100,8 +110,10 @@ function SerpentineBorder({ children }) {
           style={{
             width: `calc(100% + ${BORDER_EXTRA}px)`,
             left: -BORDER_EXTRA / 2,
+            top: -TOP_OFFSET,
+            height: `calc(100% + ${TOP_OFFSET}px)`,
           }}
-          viewBox={`${-STROKE_WIDTH / 2} ${-STROKE_WIDTH / 2} ${dimensions.width + STROKE_WIDTH * 1.5} ${dimensions.height + STROKE_WIDTH * 1.5}`}
+          viewBox={`${-STROKE_WIDTH * 2} ${-STROKE_WIDTH * 2} ${dimensions.width + STROKE_WIDTH * 4} ${dimensions.height}`}
           preserveAspectRatio="none"
           aria-hidden="true"
         >
