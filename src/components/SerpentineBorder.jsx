@@ -1,25 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
-const N = 5
-const STROKE_WIDTH = 8
-const R = 50
-const R1 = STROKE_WIDTH * (N - 1)
-const RIGHT_EXTEND = STROKE_WIDTH / 2
-const BORDER_EXTRA = 70
-const COLORS = ['#561d25', '#ce8147', '#ecdd7b', '#68b0ab', '#696d7d']
-const O_TOTAL = (N - 1) * STROKE_WIDTH  // total spread of all stripes
-const BORDER_WIDTH = STROKE_WIDTH * N   // full border thickness
 // Vertical SVG offset: choose so that SVG y-coordinates used for
 // section junctions (the Y[] values) map 1:1 to wrapper coordinates.
 // With viewBox y-origin at -2 * STROKE_WIDTH, setting TOP_OFFSET to
 // 2 * STROKE_WIDTH makes screenY == svgY for all Y-based math below.
-const TOP_OFFSET = 2 * STROKE_WIDTH
 // Shift so the horizontal band at each turn is centered on the section junction (yCurr)
-const Y_OFFSET = O_TOTAL / 2
 // Shift applied only to the top entry arc so the middle stripe's first horizontal
 // is at Y[0]; junction math is unchanged. Equals (middle stripe's o) + Y_OFFSET.
-const TOP_ARC_SHIFT = ((N - 1) / 2) * STROKE_WIDTH + Y_OFFSET
 
-function buildPathD(W, Y) {
+function buildPathD(W, Y, N, R, STROKE_WIDTH, COLORS, TOP_ARC_SHIFT, Y_OFFSET, O_TOTAL) {
+  const R1 = STROKE_WIDTH * (N - 1)
+  const RIGHT_EXTEND = STROKE_WIDTH / 2
   const n = Y.length - 1
   if (n < 1 || W <= 0) return ''
   const Wr = W + RIGHT_EXTEND
@@ -81,7 +71,18 @@ function buildPathD(W, Y) {
   return parts
 }
 
-function SerpentineBorder({ children }) {
+function SerpentineBorder({
+  children,
+  N = 5,
+  STROKE_WIDTH = 8,
+  R = 50,
+  BORDER_EXTRA = 70,
+  COLORS = ['#561d25', '#ce8147', '#ecdd7b', '#68b0ab', '#696d7d'],
+}) {
+  const O_TOTAL = (N - 1) * STROKE_WIDTH
+  const TOP_OFFSET = 2 * STROKE_WIDTH
+  const Y_OFFSET = O_TOTAL / 2
+  const TOP_ARC_SHIFT = ((N - 1) / 2) * STROKE_WIDTH + Y_OFFSET
   const wrapperRef = useRef(null)
   const [paths, setPaths] = useState([])
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
@@ -102,13 +103,13 @@ function SerpentineBorder({ children }) {
       const totalHeight = Y[Y.length - 1]
       const borderWidth = W + BORDER_EXTRA
       setDimensions({ width: borderWidth, height: totalHeight })
-      setPaths(buildPathD(borderWidth, Y))
+      setPaths(buildPathD(borderWidth, Y, N, R, STROKE_WIDTH, COLORS, TOP_ARC_SHIFT, Y_OFFSET, O_TOTAL))
     }
     measure()
     const ro = new ResizeObserver(measure)
     ro.observe(wrapper)
     return () => ro.disconnect()
-  }, [children])
+  }, [children, N, STROKE_WIDTH, R, BORDER_EXTRA, COLORS])
 
   return (
     <div ref={wrapperRef} className="serpentine-wrapper">

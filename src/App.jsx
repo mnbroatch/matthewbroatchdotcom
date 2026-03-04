@@ -1,5 +1,7 @@
-import SerpentineBorder from './components/SerpentineBorder'
+import { SerpentineBorderProvider } from './context/SerpentineBorderContext'
+import SerpentineBorderWithDemo from './components/SerpentineBorderWithDemo'
 import DialogueSection from './components/DialogueSection'
+import BorderDemoSection from './components/BorderDemoSection'
 import ExperienceSection from './components/ExperienceSection'
 import BoardGameSection from './components/BoardGameSection'
 import ReplyGuyBotSection from './components/ReplyGuyBotSection'
@@ -7,9 +9,10 @@ import MusicSection from './components/MusicSection'
 
 function App() {
   return (
-    <SerpentineBorder>
-      <main>
+    <SerpentineBorderProvider>
+      <SerpentineBorderWithDemo>
         <DialogueSection />
+        <BorderDemoSection />
         <BoardGameSection />
         <ReplyGuyBotSection />
         <MusicSection />
@@ -21,9 +24,10 @@ function App() {
         <MusicSection />
         <MusicSection />
         <MusicSection />
+        <MusicSection />
         <ExperienceSection />
-      </main>
-    </SerpentineBorder>
+      </SerpentineBorderWithDemo>
+    </SerpentineBorderProvider>
   )
 }
 
