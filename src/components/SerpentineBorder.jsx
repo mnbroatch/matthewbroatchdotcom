@@ -7,12 +7,12 @@ import { useEffect, useRef, useState } from 'react'
 // Shift applied only to the top entry arc so the middle stripe's first horizontal
 // is at Y[0]; junction math is unchanged. Equals (middle stripe's o) + Y_OFFSET.
 
-function buildPathD(W, Y, N, R, STROKE_WIDTH, COLORS, TOP_ARC_SHIFT, Y_OFFSET, O_TOTAL) {
+function buildPathD(W, Y, N, R, STROKE_WIDTH, COLORS, TOP_ARC_SHIFT, Y_OFFSET, O_TOTAL, BORDER_EXTRA) {
   const R1 = STROKE_WIDTH * (N - 1)
   const RIGHT_EXTEND = STROKE_WIDTH / 2
   const n = Y.length - 1
   if (n < 1 || W <= 0) return ''
-  const Wr = W + RIGHT_EXTEND
+  const Wr = BORDER_EXTRA === 0 ? W : W + RIGHT_EXTEND
   const parts = []
   for (let i = 0; i < N; i++) {
     const o = i * STROKE_WIDTH
@@ -24,18 +24,27 @@ function buildPathD(W, Y, N, R, STROKE_WIDTH, COLORS, TOP_ARC_SHIFT, Y_OFFSET, O
     const rj1 = R1 - oj  // radius when stripe i is the inner/flipped stripe
     if (r <= 0 || rj <= 0) continue
 
+    // When BORDER_EXTRA is 0, align outer stripe with section edges [0, W].
+    // Strokes are centered on the path: shift path right by half stroke so visible left edge is at 0,
+    // and shift right side path left by half stroke so visible right edge is at W.
+    const xLeft = BORDER_EXTRA === 0 ? o - O_TOTAL + RIGHT_EXTEND : o
+    const xRight = BORDER_EXTRA === 0 ? W - oj - RIGHT_EXTEND : Wr - oj
+    const xLeftArc = BORDER_EXTRA === 0 ? R - O_TOTAL + RIGHT_EXTEND : R
+    const xRightArc = BORDER_EXTRA === 0 ? W - R - RIGHT_EXTEND : Wr - R
+    const xRightR1 = BORDER_EXTRA === 0 ? W - R1 - RIGHT_EXTEND : Wr - R1
+
     // yExit: the y-coordinate where arc-2 exits at each turn
     // Derived: cy = yCurr + R - O_TOTAL (fixed for all stripes at any turn)
     // so exit y = cy = yCurr + R - O_TOTAL
 
     const yCurrTop = O_TOTAL + Y_OFFSET
     const segs = [
-      `M ${Wr - oj} ${yCurrTop - R1 - STROKE_WIDTH / 2 - TOP_ARC_SHIFT}`,
-      `L ${Wr - oj} ${yCurrTop - R1 - TOP_ARC_SHIFT}`,
-      `A ${rj1} ${rj1} 0 0 1 ${Wr - R1} ${yCurrTop - oj - TOP_ARC_SHIFT}`,
-      `L ${R} ${o + Y_OFFSET - TOP_ARC_SHIFT}`,
-      `A ${r} ${r} 0 0 0 ${o} ${R + Y_OFFSET - TOP_ARC_SHIFT}`,
-      `L ${o} ${R + Y_OFFSET}`,
+      `M ${xRight} ${yCurrTop - R1 - STROKE_WIDTH / 2 - TOP_ARC_SHIFT}`,
+      `L ${xRight} ${yCurrTop - R1 - TOP_ARC_SHIFT}`,
+      `A ${rj1} ${rj1} 0 0 1 ${xRightR1} ${yCurrTop - oj - TOP_ARC_SHIFT}`,
+      `L ${xLeftArc} ${o + Y_OFFSET - TOP_ARC_SHIFT}`,
+      `A ${r} ${r} 0 0 0 ${xLeft} ${R + Y_OFFSET - TOP_ARC_SHIFT}`,
+      `L ${xLeft} ${R + Y_OFFSET}`,
     ]
 
     for (let t = 0; t < n - 1; t++) {
@@ -45,26 +54,26 @@ function buildPathD(W, Y, N, R, STROKE_WIDTH, COLORS, TOP_ARC_SHIFT, Y_OFFSET, O
 
       if (t % 2 === 0) {
         // Even turn: left vertical (x=o)  right vertical (x=Wr-oj)
-        segs.push(`L ${o} ${yCurr - R + Y_OFFSET}`)
-        segs.push(`A ${r}  ${r}  0 0 0 ${R}      ${yCurr - o + Y_OFFSET}`)   // DOWNRIGHT, center (R, yCurr-R)
-        segs.push(`L ${Wr - R} ${yCurr - o + Y_OFFSET}`)
-        segs.push(`A ${rj} ${rj} 0 0 1 ${Wr - oj} ${yExit}`)      // RIGHTDOWN, center (Wr-R, yExit)
-        segs.push(`L ${Wr - oj} ${yNext - R + Y_OFFSET}`)
+        segs.push(`L ${xLeft} ${yCurr - R + Y_OFFSET}`)
+        segs.push(`A ${r}  ${r}  0 0 0 ${xLeftArc}      ${yCurr - o + Y_OFFSET}`)   // DOWNRIGHT, center (R, yCurr-R)
+        segs.push(`L ${xRightArc} ${yCurr - o + Y_OFFSET}`)
+        segs.push(`A ${rj} ${rj} 0 0 1 ${xRight} ${yExit}`)      // RIGHTDOWN, center (Wr-R, yExit)
+        segs.push(`L ${xRight} ${yNext - R + Y_OFFSET}`)
       } else {
         // Odd turn: right vertical (x=Wr-oj)  left vertical (x=o)
-        segs.push(`L ${Wr - oj} ${yCurr - R + Y_OFFSET}`)
-        segs.push(`A ${rj} ${rj} 0 0 1 ${Wr - R} ${yCurr - oj + Y_OFFSET}`)  // DOWNLEFT,  center (Wr-R, yCurr-R)
-        segs.push(`L ${R} ${yCurr - oj + Y_OFFSET}`)
-        segs.push(`A ${r}  ${r}  0 0 0 ${o}      ${yExit}`)        // LEFTDOWN,  center (R, yExit)
-        segs.push(`L ${o} ${yNext - R + Y_OFFSET}`)
+        segs.push(`L ${xRight} ${yCurr - R + Y_OFFSET}`)
+        segs.push(`A ${rj} ${rj} 0 0 1 ${xRightArc} ${yCurr - oj + Y_OFFSET}`)  // DOWNLEFT,  center (Wr-R, yCurr-R)
+        segs.push(`L ${xLeftArc} ${yCurr - oj + Y_OFFSET}`)
+        segs.push(`A ${r}  ${r}  0 0 0 ${xLeft}      ${yExit}`)        // LEFTDOWN,  center (R, yExit)
+        segs.push(`L ${xLeft} ${yNext - R + Y_OFFSET}`)
       }
     }
 
     const lastY = Y[n] + Y_OFFSET
     if ((n - 2) % 2 === 0) {
-      segs.push(`L ${Wr - oj} ${lastY}`)  // ended on right vertical
+      segs.push(`L ${xRight} ${lastY}`)  // ended on right vertical
     } else {
-      segs.push(`L ${o} ${lastY}`)         // ended on left vertical
+      segs.push(`L ${xLeft} ${lastY}`)         // ended on left vertical
     }
     parts.push({ d: segs.join(' '), color: COLORS[i] })
   }
@@ -76,7 +85,7 @@ function SerpentineBorder({
   N = 5,
   STROKE_WIDTH = 8,
   R = 50,
-  BORDER_EXTRA = 70,
+  BORDER_EXTRA = 0,
   COLORS = ['#561d25', '#ce8147', '#ecdd7b', '#68b0ab', '#696d7d'],
 }) {
   const O_TOTAL = (N - 1) * STROKE_WIDTH
@@ -103,13 +112,23 @@ function SerpentineBorder({
       const totalHeight = Y[Y.length - 1]
       const borderWidth = W + BORDER_EXTRA
       setDimensions({ width: borderWidth, height: totalHeight })
-      setPaths(buildPathD(borderWidth, Y, N, R, STROKE_WIDTH, COLORS, TOP_ARC_SHIFT, Y_OFFSET, O_TOTAL))
+      setPaths(buildPathD(borderWidth, Y, N, R, STROKE_WIDTH, COLORS, TOP_ARC_SHIFT, Y_OFFSET, O_TOTAL, BORDER_EXTRA))
     }
     measure()
     const ro = new ResizeObserver(measure)
     ro.observe(wrapper)
     return () => ro.disconnect()
   }, [children, N, STROKE_WIDTH, R, BORDER_EXTRA, COLORS])
+
+  const viewBoxMinX = BORDER_EXTRA === 0
+    ? -Math.max(STROKE_WIDTH * 2 + STROKE_WIDTH / 2, O_TOTAL)
+    : -STROKE_WIDTH * 2 - STROKE_WIDTH / 2
+
+  // When BORDER_EXTRA is 0, viewBox width must be (W - viewBoxMinX) so that viewBox x = W maps to SVG right edge
+  const viewBoxWidth = BORDER_EXTRA === 0
+    ? dimensions.width - viewBoxMinX
+    : dimensions.width + STROKE_WIDTH * 4 + STROKE_WIDTH / 2 + STROKE_WIDTH
+  const viewBoxHeight = dimensions.height + TOP_OFFSET + TOP_ARC_SHIFT
 
   return (
     <div ref={wrapperRef} className="serpentine-wrapper">
@@ -122,7 +141,7 @@ function SerpentineBorder({
             top: -(TOP_OFFSET + TOP_ARC_SHIFT),
             height: `calc(100% + ${TOP_OFFSET + TOP_ARC_SHIFT}px)`,
           }}
-          viewBox={`${-STROKE_WIDTH * 2 - STROKE_WIDTH / 2} ${-STROKE_WIDTH * 2 - TOP_ARC_SHIFT} ${dimensions.width + STROKE_WIDTH * 4 + STROKE_WIDTH / 2 + STROKE_WIDTH} ${dimensions.height + TOP_OFFSET + TOP_ARC_SHIFT}`}
+          viewBox={`${viewBoxMinX} ${-STROKE_WIDTH * 2 - TOP_ARC_SHIFT} ${viewBoxWidth} ${viewBoxHeight}`}
           preserveAspectRatio="none"
           aria-hidden="true"
         >
