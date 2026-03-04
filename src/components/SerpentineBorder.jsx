@@ -8,9 +8,16 @@ const BORDER_EXTRA = 70
 const COLORS = ['#561d25', '#ce8147', '#ecdd7b', '#68b0ab', '#696d7d']
 const O_TOTAL = (N - 1) * STROKE_WIDTH  // total spread of all stripes
 const BORDER_WIDTH = STROKE_WIDTH * N   // full border thickness
-const TOP_OFFSET = BORDER_WIDTH - 1.5 * STROKE_WIDTH  // vertical shift so border kisses top (overshoot corrected)
+// Vertical SVG offset: choose so that SVG y-coordinates used for
+// section junctions (the Y[] values) map 1:1 to wrapper coordinates.
+// With viewBox y-origin at -2 * STROKE_WIDTH, setting TOP_OFFSET to
+// 2 * STROKE_WIDTH makes screenY == svgY for all Y-based math below.
+const TOP_OFFSET = 2 * STROKE_WIDTH
 // Shift so the horizontal band at each turn is centered on the section junction (yCurr)
 const Y_OFFSET = O_TOTAL / 2
+// Shift applied only to the top entry arc so the middle stripe's first horizontal
+// is at Y[0]; junction math is unchanged. Equals (middle stripe's o) + Y_OFFSET.
+const TOP_ARC_SHIFT = ((N - 1) / 2) * STROKE_WIDTH + Y_OFFSET
 
 function buildPathD(W, Y) {
   const n = Y.length - 1
@@ -33,11 +40,12 @@ function buildPathD(W, Y) {
 
     const yCurrTop = O_TOTAL + Y_OFFSET
     const segs = [
-      `M ${Wr - oj} ${yCurrTop - R1 - STROKE_WIDTH / 2}`,
-      `L ${Wr - oj} ${yCurrTop - R1}`,
-      `A ${rj1} ${rj1} 0 0 1 ${Wr - R1} ${yCurrTop - oj}`,
-      `L ${R} ${o + Y_OFFSET}`,
-      `A ${r} ${r} 0 0 0 ${o} ${R + Y_OFFSET}`,
+      `M ${Wr - oj} ${yCurrTop - R1 - STROKE_WIDTH / 2 - TOP_ARC_SHIFT}`,
+      `L ${Wr - oj} ${yCurrTop - R1 - TOP_ARC_SHIFT}`,
+      `A ${rj1} ${rj1} 0 0 1 ${Wr - R1} ${yCurrTop - oj - TOP_ARC_SHIFT}`,
+      `L ${R} ${o + Y_OFFSET - TOP_ARC_SHIFT}`,
+      `A ${r} ${r} 0 0 0 ${o} ${R + Y_OFFSET - TOP_ARC_SHIFT}`,
+      `L ${o} ${R + Y_OFFSET}`,
     ]
 
     for (let t = 0; t < n - 1; t++) {
@@ -110,10 +118,10 @@ function SerpentineBorder({ children }) {
           style={{
             width: `calc(100% + ${BORDER_EXTRA}px)`,
             left: -BORDER_EXTRA / 2,
-            top: -TOP_OFFSET,
-            height: `calc(100% + ${TOP_OFFSET}px)`,
+            top: -(TOP_OFFSET + TOP_ARC_SHIFT),
+            height: `calc(100% + ${TOP_OFFSET + TOP_ARC_SHIFT}px)`,
           }}
-          viewBox={`${-STROKE_WIDTH * 2} ${-STROKE_WIDTH * 2} ${dimensions.width + STROKE_WIDTH * 4} ${dimensions.height}`}
+          viewBox={`${-STROKE_WIDTH * 2 - STROKE_WIDTH / 2} ${-STROKE_WIDTH * 2 - TOP_ARC_SHIFT} ${dimensions.width + STROKE_WIDTH * 4 + STROKE_WIDTH / 2 + STROKE_WIDTH} ${dimensions.height + TOP_OFFSET + TOP_ARC_SHIFT}`}
           preserveAspectRatio="none"
           aria-hidden="true"
         >
