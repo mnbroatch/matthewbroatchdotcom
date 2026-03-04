@@ -230,6 +230,10 @@ main {
 }
 
 /* Board game section */
+.section-board-game {
+  scroll-margin-top: 50px;
+}
+
 .section-board-game .section-bg__ghost {
   inset: 0;
   transform: none;
@@ -272,29 +276,45 @@ main {
   background: var(--lavender);
 }
 
-/* Modal */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  z-index: 1000;
+/* Board game section: intro and demo swap with one fluid height transition */
+.board-game-section-swap {
+  /* height and overflow set by JS for measured transition */
 }
 
-.modal-content {
+.board-game-section-row {
+  flex-shrink: 0;
+}
+
+.board-game-section-row-inner {
+  /* content drives natural height for measurement */
+}
+
+.board-game-demo-content {
   position: relative;
-  background: var(--slate-indigo);
-  border-radius: 16px;
-  padding: 1rem;
-  max-width: 480px;
-  width: 100%;
-  box-shadow: 0 0 40px rgba(52, 67, 94, 0.5);
+  color: #fff;
+  text-align: center;
+  animation: board-game-demo-fade-in 0.35s ease-out;
 }
 
-.modal-close {
+@keyframes board-game-demo-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.board-game-demo-content h2 {
+  margin: 1rem 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+.board-game-demo-content h2:first-child {
+  margin-top: 0;
+}
+
+.board-game-demo-close {
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
@@ -311,18 +331,13 @@ main {
   border-radius: 4px;
 }
 
-.modal-close:hover {
+.board-game-demo-close:hover {
   background: rgba(255, 255, 255, 0.2);
 }
 
-.modal-placeholder {
-  color: #fff;
-  text-align: center;
-}
-
-.modal-placeholder__hint {
-  font-size: 0.9rem;
-  opacity: 0.85;
+.board-game-demo-play-wrapper {
+  position: relative;
+  min-height: 320px;
 }
 
 /* Dialogue section: wrapper and psychedelic overrides for react-dialogue-tree */
@@ -438,6 +453,15 @@ main {
   color: #fff;
 }
 
+@keyframes board-game-end-screen-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .board-game-end-screen {
   position: absolute;
   inset: 0;
@@ -450,6 +474,7 @@ main {
   padding: 3rem 1.5rem 1.5rem;
   background: #1a1a2e;
   pointer-events: auto;
+  animation: board-game-end-screen-fade-in 0.5s ease-out forwards;
 }
 
 .board-game-end-screen__title {
