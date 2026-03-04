@@ -26,7 +26,7 @@
   --section-padding-inline: clamp(1rem, 5vw, 3rem);
   --serpentine-clearance: 40px;
   --content-max-width: 1000px;
-  /* Space for serpentine border overflow on small screens (match BORDER_EXTRA/2 in SerpentineBorder.jsx) */
+  /* Space for serpentine border overflow on small screens (match horizontalOverlap/2 in SerpentineBorder.jsx) */
   --serpentine-border-overflow: 20px;
 }
 

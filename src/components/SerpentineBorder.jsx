@@ -11,8 +11,7 @@ function buildPathD(W, Y, N, R, STROKE_WIDTH, COLORS, TOP_ARC_SHIFT, Y_OFFSET, O
   const R1 = STROKE_WIDTH * (N - 1)
   const RIGHT_EXTEND = STROKE_WIDTH / 2
   const n = Y.length - 1
-  if (n < 1 || W <= 0) return ''
-  const Wr = BORDER_EXTRA === 0 ? W : W + RIGHT_EXTEND
+  // Right edge of border is always at W (stroke ends at W) so horizontalOverlap is exactly BORDER_EXTRA px.
   const parts = []
   for (let i = 0; i < N; i++) {
     const o = i * STROKE_WIDTH
@@ -22,16 +21,14 @@ function buildPathD(W, Y, N, R, STROKE_WIDTH, COLORS, TOP_ARC_SHIFT, Y_OFFSET, O
     const rj = R - oj  // radius when stripe i is the inner/flipped stripe
     const r1  = R1 - o   // radius when stripe i is the outer/reference stripe
     const rj1 = R1 - oj  // radius when stripe i is the inner/flipped stripe
-    if (r <= 0 || rj <= 0) continue
 
-    // When BORDER_EXTRA is 0, align outer stripe with section edges [0, W].
-    // Strokes are centered on the path: shift path right by half stroke so visible left edge is at 0,
-    // and shift right side path left by half stroke so visible right edge is at W.
-    const xLeft = BORDER_EXTRA === 0 ? o - O_TOTAL + RIGHT_EXTEND : o
-    const xRight = BORDER_EXTRA === 0 ? W - oj - RIGHT_EXTEND : Wr - oj
-    const xLeftArc = BORDER_EXTRA === 0 ? R - O_TOTAL + RIGHT_EXTEND : R
-    const xRightArc = BORDER_EXTRA === 0 ? W - R - RIGHT_EXTEND : Wr - R
-    const xRightR1 = BORDER_EXTRA === 0 ? W - R1 - RIGHT_EXTEND : Wr - R1
+    // Left edge of border at -BORDER_EXTRA (so overlap is BORDER_EXTRA on the left too). leftOffset = O_TOTAL - BORDER_EXTRA + RIGHT_EXTEND gives outermost path at -BORDER_EXTRA + RIGHT_EXTEND, stroke edge at -BORDER_EXTRA. Right side always ends at W.
+    const leftOffset = O_TOTAL - BORDER_EXTRA + RIGHT_EXTEND
+    const xLeft = o - O_TOTAL + leftOffset
+    const xRight = W - oj - RIGHT_EXTEND
+    const xLeftArc = xLeft + (R - o)
+    const xRightArc = W - R - RIGHT_EXTEND
+    const xRightR1 = W - R1 - RIGHT_EXTEND
 
     // yExit: the y-coordinate where arc-2 exits at each turn
     // Derived: cy = yCurr + R - O_TOTAL (fixed for all stripes at any turn)
@@ -75,19 +72,25 @@ function buildPathD(W, Y, N, R, STROKE_WIDTH, COLORS, TOP_ARC_SHIFT, Y_OFFSET, O
     } else {
       segs.push(`L ${xLeft} ${lastY}`)         // ended on left vertical
     }
-    parts.push({ d: segs.join(' '), color: COLORS[i] })
+    parts.push({ d: segs.join(' '), color: COLORS[i % COLORS.length] })
   }
   return parts
 }
 
 function SerpentineBorder({
   children,
-  N = 5,
-  STROKE_WIDTH = 8,
-  R = 50,
-  BORDER_EXTRA = 0,
-  COLORS = ['#561d25', '#ce8147', '#ecdd7b', '#68b0ab', '#696d7d'],
+  strokeCount = 5,
+  strokeWidth = 8,
+  radius = 50,
+  horizontalOverlap = 0,
+  colors = ['#561d25', '#ce8147', '#ecdd7b', '#68b0ab', '#696d7d'],
 }) {
+  const N = strokeCount
+  const STROKE_WIDTH = strokeWidth
+  const R = radius
+  const BORDER_EXTRA = horizontalOverlap
+  const COLORS = colors
+
   const O_TOTAL = (N - 1) * STROKE_WIDTH
   const TOP_OFFSET = 2 * STROKE_WIDTH
   const Y_OFFSET = O_TOTAL / 2
@@ -120,14 +123,9 @@ function SerpentineBorder({
     return () => ro.disconnect()
   }, [children, N, STROKE_WIDTH, R, BORDER_EXTRA, COLORS])
 
-  const viewBoxMinX = BORDER_EXTRA === 0
-    ? -Math.max(STROKE_WIDTH * 2 + STROKE_WIDTH / 2, O_TOTAL)
-    : -STROKE_WIDTH * 2 - STROKE_WIDTH / 2
-
-  // When BORDER_EXTRA is 0, viewBox width must be (W - viewBoxMinX) so that viewBox x = W maps to SVG right edge
-  const viewBoxWidth = BORDER_EXTRA === 0
-    ? dimensions.width - viewBoxMinX
-    : dimensions.width + STROKE_WIDTH * 4 + STROKE_WIDTH / 2 + STROKE_WIDTH
+  // ViewBox: when horizontalOverlap > 0, path extends to -BORDER_EXTRA on the left, so include that and keep right at W.
+  const viewBoxMinX = BORDER_EXTRA > 0 ? -BORDER_EXTRA : 0
+  const viewBoxWidth = BORDER_EXTRA > 0 ? dimensions.width + BORDER_EXTRA : dimensions.width
   const viewBoxHeight = dimensions.height + TOP_OFFSET + TOP_ARC_SHIFT
 
   return (

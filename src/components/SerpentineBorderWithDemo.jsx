@@ -11,10 +11,11 @@ export default function SerpentineBorderWithDemo({ children }) {
 
   const borderProps = ctx
     ? {
-        N: ctx.strokeCount,
-        STROKE_WIDTH: ctx.strokeWidth,
-        R: ctx.radius,
-        COLORS: ctx.colors,
+        strokeCount: ctx.strokeCount,
+        strokeWidth: ctx.strokeWidth,
+        radius: ctx.radius,
+        horizontalOverlap: ctx.horizontalOverlap,
+        colors: ctx.colors,
       }
     : undefined
 

@@ -20,6 +20,8 @@ function BorderDemoSection() {
     setStrokeWidth,
     radius,
     setRadius,
+    horizontalOverlap,
+    setHorizontalOverlap,
     colors,
     setColorAt,
     addColor,
@@ -37,8 +39,6 @@ function BorderDemoSection() {
           <span>Stroke count</span>
           <input
             type="number"
-            min={1}
-            max={20}
             value={strokeCount}
             onChange={(e) => setStrokeCount(Number(e.target.value) || 1)}
           />
@@ -47,8 +47,6 @@ function BorderDemoSection() {
           <span>Stroke width (px)</span>
           <input
             type="number"
-            min={2}
-            max={40}
             value={strokeWidth}
             onChange={(e) => setStrokeWidth(Number(e.target.value) || 2)}
           />
@@ -57,10 +55,16 @@ function BorderDemoSection() {
           <span>Radius (px)</span>
           <input
             type="number"
-            min={20}
-            max={200}
             value={radius}
             onChange={(e) => setRadius(Number(e.target.value) || 20)}
+          />
+        </label>
+        <label className="border-demo-label">
+          <span>Horizontal overlap (px)</span>
+          <input
+            type="number"
+            value={horizontalOverlap}
+            onChange={(e) => setHorizontalOverlap(Number(e.target.value) || 0)}
           />
         </label>
       </div>
