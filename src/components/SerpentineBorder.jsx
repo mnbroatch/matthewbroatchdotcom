@@ -7,11 +7,11 @@ import { useEffect, useRef, useState } from 'react'
 // Shift applied only to the top entry arc so the middle stripe's first horizontal
 // is at Y[0]; junction math is unchanged. Equals (middle stripe's o) + Y_OFFSET.
 
+// Overlap is applied to both sides: BORDER_EXTRA (overlapPerSide) px on left and right.
 function buildPathD(W, Y, N, R, STROKE_WIDTH, COLORS, TOP_ARC_SHIFT, Y_OFFSET, O_TOTAL, BORDER_EXTRA) {
   const R1 = STROKE_WIDTH * (N - 1)
   const RIGHT_EXTEND = STROKE_WIDTH / 2
   const n = Y.length - 1
-  // Right edge of border is always at W (stroke ends at W) so horizontalOverlap is exactly BORDER_EXTRA px.
   const parts = []
   for (let i = 0; i < N; i++) {
     const o = i * STROKE_WIDTH
@@ -22,13 +22,14 @@ function buildPathD(W, Y, N, R, STROKE_WIDTH, COLORS, TOP_ARC_SHIFT, Y_OFFSET, O
     const r1  = R1 - o   // radius when stripe i is the outer/reference stripe
     const rj1 = R1 - oj  // radius when stripe i is the inner/flipped stripe
 
-    // Left edge of border at -BORDER_EXTRA (so overlap is BORDER_EXTRA on the left too). leftOffset = O_TOTAL - BORDER_EXTRA + RIGHT_EXTEND gives outermost path at -BORDER_EXTRA + RIGHT_EXTEND, stroke edge at -BORDER_EXTRA. Right side always ends at W.
+    // Positive BORDER_EXTRA: border extends past [0,W]. Negative: border recedes. Same formula for both.
     const leftOffset = O_TOTAL - BORDER_EXTRA + RIGHT_EXTEND
     const xLeft = o - O_TOTAL + leftOffset
-    const xRight = W - oj - RIGHT_EXTEND
+    const rightExt = BORDER_EXTRA
+    const xRight = W + rightExt - oj - RIGHT_EXTEND
     const xLeftArc = xLeft + (R - o)
-    const xRightArc = W - R - RIGHT_EXTEND
-    const xRightR1 = W - R1 - RIGHT_EXTEND
+    const xRightArc = W + rightExt - R - RIGHT_EXTEND
+    const xRightR1 = W + rightExt - R1 - RIGHT_EXTEND
 
     // yExit: the y-coordinate where arc-2 exits at each turn
     // Derived: cy = yCurr + R - O_TOTAL (fixed for all stripes at any turn)
@@ -77,6 +78,14 @@ function buildPathD(W, Y, N, R, STROKE_WIDTH, COLORS, TOP_ARC_SHIFT, Y_OFFSET, O
   return parts
 }
 
+export function resolveOverlapToPixels(horizontalOverlap, N, STROKE_WIDTH) {
+  if (typeof horizontalOverlap === 'number') return horizontalOverlap
+  const totalBorderWidth = N * STROKE_WIDTH
+  if (horizontalOverlap === 'borderWidth') return totalBorderWidth
+  if (horizontalOverlap === 'halfBorderWidth') return totalBorderWidth / 2
+  return 0
+}
+
 function SerpentineBorder({
   children,
   strokeCount = 5,
@@ -84,17 +93,22 @@ function SerpentineBorder({
   radius = 50,
   horizontalOverlap = 0,
   colors = ['#561d25', '#ce8147', '#ecdd7b', '#68b0ab', '#696d7d'],
+  // 'content': sections define layout box (original behavior, border may overflow)
+  // 'border': outer border edge defines layout box (current behavior)
+  layoutMode = 'border',
 }) {
   const N = strokeCount
   const STROKE_WIDTH = strokeWidth
   const R = radius
-  const BORDER_EXTRA = horizontalOverlap
+  // Overlap is per-side; total extra width = 2 * overlapPerSide
+  const BORDER_EXTRA = resolveOverlapToPixels(horizontalOverlap, N, STROKE_WIDTH)
   const COLORS = colors
 
   const O_TOTAL = (N - 1) * STROKE_WIDTH
   const TOP_OFFSET = 2 * STROKE_WIDTH
   const Y_OFFSET = O_TOTAL / 2
   const TOP_ARC_SHIFT = ((N - 1) / 2) * STROKE_WIDTH + Y_OFFSET
+  const TOTAL_BORDER_WIDTH = N * STROKE_WIDTH
   const wrapperRef = useRef(null)
   const [paths, setPaths] = useState([])
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
@@ -106,39 +120,71 @@ function SerpentineBorder({
       const sections = wrapper.querySelectorAll('.section')
       if (sections.length === 0) return
       const rect = wrapper.getBoundingClientRect()
-      const W = rect.width
+      const baseWidth = rect.width
+
+      const W =
+        layoutMode === 'border'
+          ? Math.max(1, baseWidth - 2 * BORDER_EXTRA)
+          : Math.max(1, baseWidth)
       const Y = [0]
       for (let i = 0; i < sections.length; i++) {
         const r = sections[i].getBoundingClientRect()
         Y.push((r.top - rect.top) + r.height)
       }
       const totalHeight = Y[Y.length - 1]
-      const borderWidth = W + BORDER_EXTRA
-      setDimensions({ width: borderWidth, height: totalHeight })
-      setPaths(buildPathD(borderWidth, Y, N, R, STROKE_WIDTH, COLORS, TOP_ARC_SHIFT, Y_OFFSET, O_TOTAL, BORDER_EXTRA))
+      const totalWidth =
+        layoutMode === 'border'
+          ? Math.max(1, W + 2 * BORDER_EXTRA)
+          : Math.max(1, W + 2 * BORDER_EXTRA)
+      setDimensions({ width: totalWidth, height: totalHeight })
+      setPaths(buildPathD(W, Y, N, R, STROKE_WIDTH, COLORS, TOP_ARC_SHIFT, Y_OFFSET, O_TOTAL, BORDER_EXTRA))
     }
     measure()
     const ro = new ResizeObserver(measure)
     ro.observe(wrapper)
     return () => ro.disconnect()
-  }, [children, N, STROKE_WIDTH, R, BORDER_EXTRA, COLORS])
+  }, [children, N, STROKE_WIDTH, R, BORDER_EXTRA, COLORS, layoutMode])
 
-  // ViewBox: when horizontalOverlap > 0, path extends to -BORDER_EXTRA on the left, so include that and keep right at W.
+  const RIGHT_EXTEND = STROKE_WIDTH / 2
   const viewBoxMinX = BORDER_EXTRA > 0 ? -BORDER_EXTRA : 0
-  const viewBoxWidth = BORDER_EXTRA > 0 ? dimensions.width + BORDER_EXTRA : dimensions.width
+  const viewBoxWidth = dimensions.width
   const viewBoxHeight = dimensions.height + TOP_OFFSET + TOP_ARC_SHIFT
 
+  const wrapperStyle =
+    layoutMode === 'border'
+      ? {
+          boxSizing: 'border-box',
+          marginTop: TOTAL_BORDER_WIDTH / 2,
+          ...(BORDER_EXTRA > 0 && {
+            paddingLeft: BORDER_EXTRA,
+            paddingRight: BORDER_EXTRA,
+          }),
+        }
+      : {
+          boxSizing: 'border-box',
+        }
+
+  const svgStyle =
+    layoutMode === 'border'
+      ? {
+          width: '100%',
+          left: 0,
+          top: -(TOP_OFFSET + TOP_ARC_SHIFT),
+          height: `calc(100% + ${TOP_OFFSET + TOP_ARC_SHIFT}px)`,
+        }
+      : {
+          width: `calc(100% + ${2 * BORDER_EXTRA}px)`,
+          left: -BORDER_EXTRA,
+          top: -(TOP_OFFSET + TOP_ARC_SHIFT),
+          height: `calc(100% + ${TOP_OFFSET + TOP_ARC_SHIFT}px)`,
+        }
+
   return (
-    <div ref={wrapperRef} className="serpentine-wrapper">
+    <div ref={wrapperRef} className="serpentine-wrapper" style={wrapperStyle}>
       {dimensions.width > 0 && dimensions.height > 0 && (
         <svg
           className="serpentine-border-svg"
-          style={{
-            width: `calc(100% + ${BORDER_EXTRA}px)`,
-            left: -BORDER_EXTRA / 2,
-            top: -(TOP_OFFSET + TOP_ARC_SHIFT),
-            height: `calc(100% + ${TOP_OFFSET + TOP_ARC_SHIFT}px)`,
-          }}
+          style={svgStyle}
           viewBox={`${viewBoxMinX} ${-STROKE_WIDTH * 2 - TOP_ARC_SHIFT} ${viewBoxWidth} ${viewBoxHeight}`}
           preserveAspectRatio="none"
           aria-hidden="true"

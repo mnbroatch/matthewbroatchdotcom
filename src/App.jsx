@@ -10,23 +10,25 @@ import MusicSection from './components/MusicSection'
 function App() {
   return (
     <SerpentineBorderProvider>
-      <SerpentineBorderWithDemo>
-        <DialogueSection />
-        <BorderDemoSection />
-        <BoardGameSection />
-        <ReplyGuyBotSection />
-        <MusicSection />
-        <MusicSection />
-        <MusicSection />
-        <MusicSection />
-        <MusicSection />
-        <MusicSection />
-        <MusicSection />
-        <MusicSection />
-        <MusicSection />
-        <MusicSection />
-        <ExperienceSection />
-      </SerpentineBorderWithDemo>
+      <div className="main-content">
+        <SerpentineBorderWithDemo>
+          <DialogueSection />
+          <BorderDemoSection />
+          <BoardGameSection />
+          <ReplyGuyBotSection />
+          <MusicSection />
+          <MusicSection />
+          <MusicSection />
+          <MusicSection />
+          <MusicSection />
+          <MusicSection />
+          <MusicSection />
+          <MusicSection />
+          <MusicSection />
+          <MusicSection />
+          <ExperienceSection />
+        </SerpentineBorderWithDemo>
+      </div>
     </SerpentineBorderProvider>
   )
 }

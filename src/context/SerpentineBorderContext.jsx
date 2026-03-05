@@ -7,7 +7,8 @@ const defaultState = {
   strokeCount: 5,
   strokeWidth: 14,
   radius: 100,
-  horizontalOverlap: 0,
+  horizontalOverlap: 'halfBorderWidth',
+  layoutMode: 'border',
   colors: [...DEFAULT_COLORS],
 }
 
@@ -16,6 +17,7 @@ export function SerpentineBorderProvider({ children, initialValues }) {
   const [strokeWidth, setStrokeWidth] = useState(initialValues?.strokeWidth ?? defaultState.strokeWidth)
   const [radius, setRadius] = useState(initialValues?.radius ?? defaultState.radius)
   const [horizontalOverlap, setHorizontalOverlap] = useState(initialValues?.horizontalOverlap ?? defaultState.horizontalOverlap)
+  const [layoutMode, setLayoutMode] = useState(initialValues?.layoutMode ?? defaultState.layoutMode)
   const [colors, setColors] = useState(initialValues?.colors ?? defaultState.colors)
 
   const setColorAt = useCallback((index, value) => {
@@ -44,13 +46,15 @@ export function SerpentineBorderProvider({ children, initialValues }) {
       setRadius,
       horizontalOverlap,
       setHorizontalOverlap,
+      layoutMode,
+      setLayoutMode,
       colors,
       setColors,
       setColorAt,
       addColor,
       removeColor,
     }),
-    [strokeCount, strokeWidth, radius, horizontalOverlap, colors, setColorAt, addColor, removeColor]
+    [strokeCount, strokeWidth, radius, horizontalOverlap, layoutMode, colors, setColorAt, addColor, removeColor]
   )
 
   return (

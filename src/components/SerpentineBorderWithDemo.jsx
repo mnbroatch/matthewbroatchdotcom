@@ -16,6 +16,7 @@ export default function SerpentineBorderWithDemo({ children }) {
         radius: ctx.radius,
         horizontalOverlap: ctx.horizontalOverlap,
         colors: ctx.colors,
+        layoutMode: ctx.layoutMode,
       }
     : undefined
 
