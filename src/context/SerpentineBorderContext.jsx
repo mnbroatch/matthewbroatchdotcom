@@ -1,5 +1,8 @@
-import { createContext, useCallback, useMemo, useState } from 'react'
-import { DEFAULT_COLORS } from '../constants/serpentineBorder'
+import { createContext, useCallback, useEffect, useMemo, useState } from 'react'
+import { DEFAULT_COLORS } from 'react-serpentine-border'
+
+const SMALL_BREAKPOINT_PX = 1000
+const smallMedia = typeof window !== 'undefined' && window.matchMedia(`(max-width: ${SMALL_BREAKPOINT_PX - 1}px)`)
 
 export const SerpentineBorderContext = createContext(null)
 
@@ -8,17 +11,56 @@ const defaultState = {
   strokeWidth: 14,
   radius: 100,
   horizontalOverlap: 'halfBorderWidth',
-  layoutMode: 'border',
+  layoutMode: 'content',
   colors: [...DEFAULT_COLORS],
 }
 
+const smallScreenOverrides = {
+  strokeWidth: 6,
+  radius: 40,
+  layoutMode: 'border',
+}
+
+function getInitialSmall() {
+  if (typeof window === 'undefined') return false
+  return window.matchMedia(`(max-width: ${SMALL_BREAKPOINT_PX - 1}px)`).matches
+}
+
 export function SerpentineBorderProvider({ children, initialValues }) {
-  const [strokeCount, setStrokeCount] = useState(initialValues?.strokeCount ?? defaultState.strokeCount)
-  const [strokeWidth, setStrokeWidth] = useState(initialValues?.strokeWidth ?? defaultState.strokeWidth)
-  const [radius, setRadius] = useState(initialValues?.radius ?? defaultState.radius)
-  const [horizontalOverlap, setHorizontalOverlap] = useState(initialValues?.horizontalOverlap ?? defaultState.horizontalOverlap)
-  const [layoutMode, setLayoutMode] = useState(initialValues?.layoutMode ?? defaultState.layoutMode)
+  const initialSmall = getInitialSmall()
+  const [strokeCount, setStrokeCount] = useState(
+    initialValues?.strokeCount ?? defaultState.strokeCount
+  )
+  const [strokeWidth, setStrokeWidth] = useState(
+    initialValues?.strokeWidth ?? (initialSmall ? smallScreenOverrides.strokeWidth : defaultState.strokeWidth)
+  )
+  const [radius, setRadius] = useState(
+    initialValues?.radius ?? (initialSmall ? smallScreenOverrides.radius : defaultState.radius)
+  )
+  const [horizontalOverlap, setHorizontalOverlap] = useState(
+    initialValues?.horizontalOverlap ?? defaultState.horizontalOverlap
+  )
+  const [layoutMode, setLayoutMode] = useState(
+    initialValues?.layoutMode ?? (initialSmall ? smallScreenOverrides.layoutMode : defaultState.layoutMode)
+  )
   const [colors, setColors] = useState(initialValues?.colors ?? defaultState.colors)
+
+  useEffect(() => {
+    if (!smallMedia) return
+    const applyBreakpoint = (e) => {
+      if (e.matches) {
+        setStrokeWidth(smallScreenOverrides.strokeWidth)
+        setRadius(smallScreenOverrides.radius)
+        setLayoutMode(smallScreenOverrides.layoutMode)
+      } else {
+        setStrokeWidth(defaultState.strokeWidth)
+        setRadius(defaultState.radius)
+        setLayoutMode(defaultState.layoutMode)
+      }
+    }
+    smallMedia.addEventListener('change', applyBreakpoint)
+    return () => smallMedia.removeEventListener('change', applyBreakpoint)
+  }, [])
 
   const setColorAt = useCallback((index, value) => {
     setColors((prev) => {

@@ -1,7 +1,14 @@
 import { useContext, useState } from 'react'
 import Section from './Section'
 import { SerpentineBorderContext } from '../context/SerpentineBorderContext'
-import { resolveOverlapToPixels } from './SerpentineBorder'
+
+function resolveOverlapToPixels(horizontalOverlap, strokeCount, strokeWidth) {
+  if (typeof horizontalOverlap === 'number') return horizontalOverlap
+  const totalBorderWidth = strokeCount * strokeWidth
+  if (horizontalOverlap === 'borderWidth') return totalBorderWidth
+  if (horizontalOverlap === 'halfBorderWidth') return totalBorderWidth / 2
+  return 0
+}
 
 function NumericInput({ value, onChange, ...props }) {
   const [pending, setPending] = useState(null)

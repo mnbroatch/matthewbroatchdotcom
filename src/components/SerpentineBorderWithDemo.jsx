@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import SerpentineBorder from './SerpentineBorder'
+import { SerpentineBorder } from 'react-serpentine-border'
 import { SerpentineBorderContext } from '../context/SerpentineBorderContext'
 
 /**

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
+    "react-serpentine-border": "file:./serpentine-border",
     "board-game-engine-react": "^0.0.15",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
