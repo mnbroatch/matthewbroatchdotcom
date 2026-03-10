@@ -68,7 +68,10 @@ main {
   position: relative;
   width: 100%;
   max-width: 900px;
+  /* inline-block creates a BFC so the last section’s bottom margin doesn’t collapse;
+     with block, the wrapper height would exclude that margin and the border would stop short. */
   display: inline-block;
+  vertical-align: top; /* avoids gap below: inline-blocks get line-box descender space otherwise */
   text-align: left;
 }
 

@@ -11,20 +11,11 @@ function App() {
   return (
     <SerpentineBorderProvider>
       <div className="main-content">
-        <SerpentineBorderWithDemo>
+        <SerpentineBorderWithDemo layoutMode="border">
           <DialogueSection />
           <BorderDemoSection />
           <BoardGameSection />
           <ReplyGuyBotSection />
-          <MusicSection />
-          <MusicSection />
-          <MusicSection />
-          <MusicSection />
-          <MusicSection />
-          <MusicSection />
-          <MusicSection />
-          <MusicSection />
-          <MusicSection />
           <MusicSection />
           <ExperienceSection />
         </SerpentineBorderWithDemo>

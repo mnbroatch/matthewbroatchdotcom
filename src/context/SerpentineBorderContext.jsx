@@ -1,5 +1,7 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react'
-import { DEFAULT_COLORS } from 'react-serpentine-border'
+
+/** Default border stroke colors (from site theme: sand + charcoal-blue) */
+const DEFAULT_COLORS = ['#d8c99b', '#273e47']
 
 const SMALL_BREAKPOINT_PX = 1000
 const smallMedia = typeof window !== 'undefined' && window.matchMedia(`(max-width: ${SMALL_BREAKPOINT_PX - 1}px)`)

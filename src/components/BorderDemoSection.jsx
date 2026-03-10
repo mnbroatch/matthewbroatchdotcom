@@ -57,8 +57,6 @@ function BorderDemoSection() {
     setRadius,
     horizontalOverlap,
     setHorizontalOverlap,
-    layoutMode,
-    setLayoutMode,
     colors,
     setColorAt,
     addColor,
@@ -128,29 +126,6 @@ function BorderDemoSection() {
               />
               <span className="border-demo-overlap-px-suffix">px per side</span>
             </div>
-          </div>
-        </div>
-        <div className="border-demo-label">
-          <span>Layout mode</span>
-          <div className="border-demo-overlap-radios">
-            <label className="border-demo-radio">
-              <input
-                type="radio"
-                name="layoutMode"
-                checked={layoutMode === 'content'}
-                onChange={() => setLayoutMode('content')}
-              />
-              Content defines space
-            </label>
-            <label className="border-demo-radio">
-              <input
-                type="radio"
-                name="layoutMode"
-                checked={layoutMode === 'border'}
-                onChange={() => setLayoutMode('border')}
-              />
-              Border defines space
-            </label>
           </div>
         </div>
       </div>

@@ -1,12 +1,13 @@
 import { useContext } from 'react'
-import { SerpentineBorder } from 'react-serpentine-border'
+import { SerpentineBorder } from 'serpentine-border'
 import { SerpentineBorderContext } from '../context/SerpentineBorderContext'
 
 /**
  * Wires demo context into SerpentineBorder by passing context values as props.
  * SerpentineBorder stays dumb (props only); this component is the only one that reads context for the border.
+ * layoutMode prop overrides context (e.g. demo uses border-defined layout only).
  */
-export default function SerpentineBorderWithDemo({ children }) {
+export default function SerpentineBorderWithDemo({ children, layoutMode: layoutModeOverride }) {
   const ctx = useContext(SerpentineBorderContext)
 
   const borderProps = ctx
@@ -16,7 +17,7 @@ export default function SerpentineBorderWithDemo({ children }) {
         radius: ctx.radius,
         horizontalOverlap: ctx.horizontalOverlap,
         colors: ctx.colors,
-        layoutMode: ctx.layoutMode,
+        layoutMode: layoutModeOverride ?? ctx.layoutMode,
       }
     : undefined
 
