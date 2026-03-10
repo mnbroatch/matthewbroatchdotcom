@@ -1,8 +1,5 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react'
 
-/** Default border stroke colors (from site theme: sand + charcoal-blue) */
-const DEFAULT_COLORS = ['#d8c99b', '#273e47']
-
 const SMALL_BREAKPOINT_PX = 1000
 const smallMedia = typeof window !== 'undefined' && window.matchMedia(`(max-width: ${SMALL_BREAKPOINT_PX - 1}px)`)
 
@@ -14,7 +11,7 @@ const defaultState = {
   radius: 100,
   horizontalOverlap: 'halfBorderWidth',
   layoutMode: 'content',
-  colors: [...DEFAULT_COLORS],
+  colors: ['#561d25', '#ce8147', '#ecdd7b', '#68b0ab', '#696d7d'],
 }
 
 const smallScreenOverrides = {
