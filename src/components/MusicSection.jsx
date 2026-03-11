@@ -2,9 +2,10 @@ import Section from './Section'
 
 const REVERBNATION_URL = 'https://www.reverbnation.com/yboy'
 
-function MusicSection() {
+function MusicSection(props) {
   return (
     <Section
+      {...props}
       className="section-music"
       aria-label="Music"
       backgroundImage="/bg/more.svg"

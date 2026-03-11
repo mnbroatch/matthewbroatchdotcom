@@ -1,12 +1,15 @@
 import { useContext, useState } from 'react'
 import Section from './Section'
+import NpmPackageLink from './NpmPackageLink'
 import { SerpentineBorderContext } from '../context/SerpentineBorderContext'
 
-function resolveOverlapToPixels(horizontalOverlap, strokeCount, strokeWidth) {
-  if (typeof horizontalOverlap === 'number') return horizontalOverlap
+const NPM_SERPENTINE_BORDER = 'https://www.npmjs.com/package/serpentine-border'
+
+function resolveOverflowToPixels(horizontalOverflow, strokeCount, strokeWidth) {
+  if (typeof horizontalOverflow === 'number') return horizontalOverflow
   const totalBorderWidth = strokeCount * strokeWidth
-  if (horizontalOverlap === 'borderWidth') return totalBorderWidth
-  if (horizontalOverlap === 'halfBorderWidth') return totalBorderWidth / 2
+  if (horizontalOverflow === 'borderWidth') return totalBorderWidth
+  if (horizontalOverflow === 'halfBorderWidth') return totalBorderWidth / 2
   return 0
 }
 
@@ -37,11 +40,12 @@ function NumericInput({ value, onChange, ...props }) {
   )
 }
 
-function BorderDemoSection() {
+function BorderDemoSection(props) {
   const ctx = useContext(SerpentineBorderContext)
   if (!ctx) {
     return (
-      <Section className="section-border-demo" backgroundColor="var(--charcoal-blue)">
+      <Section {...props} className="section-border-demo" backgroundColor="var(--charcoal-blue)">
+        <NpmPackageLink href={NPM_SERPENTINE_BORDER} aria-label="serpentine-border on npm" />
         <h2 className="section-title">Serpentine border</h2>
         <p className="section-blurb">Border controls require SerpentineBorderProvider.</p>
       </Section>
@@ -55,8 +59,8 @@ function BorderDemoSection() {
     setStrokeWidth,
     radius,
     setRadius,
-    horizontalOverlap,
-    setHorizontalOverlap,
+    horizontalOverflow,
+    setHorizontalOverflow,
     colors,
     setColorAt,
     addColor,
@@ -64,7 +68,8 @@ function BorderDemoSection() {
   } = ctx
 
   return (
-    <Section className="section-border-demo" backgroundColor="var(--charcoal-blue)">
+    <Section {...props} className="section-border-demo" backgroundColor="var(--charcoal-blue)">
+      <NpmPackageLink href={NPM_SERPENTINE_BORDER} aria-label="serpentine-border on npm" />
       <h2 className="section-title">Serpentine border</h2>
       <p className="section-blurb">
         This border is drawn with a single SVG that weaves between sections. Adjust the parameters below to change it in real time.
@@ -83,14 +88,14 @@ function BorderDemoSection() {
           <NumericInput value={radius} onChange={setRadius} />
         </label>
         <div className="border-demo-label">
-          <span>Horizontal overlap</span>
+          <span>Horizontal overflow</span>
           <div className="border-demo-overlap-radios">
             <label className="border-demo-radio">
               <input
                 type="radio"
                 name="overlapMode"
-                checked={horizontalOverlap === 'borderWidth'}
-                onChange={() => setHorizontalOverlap('borderWidth')}
+                checked={horizontalOverflow === 'borderWidth'}
+                onChange={() => setHorizontalOverflow('borderWidth')}
               />
               Border width
             </label>
@@ -98,8 +103,8 @@ function BorderDemoSection() {
               <input
                 type="radio"
                 name="overlapMode"
-                checked={horizontalOverlap === 'halfBorderWidth'}
-                onChange={() => setHorizontalOverlap('halfBorderWidth')}
+                checked={horizontalOverflow === 'halfBorderWidth'}
+                onChange={() => setHorizontalOverflow('halfBorderWidth')}
               />
               Half border width
             </label>
@@ -108,21 +113,21 @@ function BorderDemoSection() {
                 <input
                   type="radio"
                   name="overlapMode"
-                  checked={typeof horizontalOverlap === 'number'}
+                  checked={typeof horizontalOverflow === 'number'}
                   onChange={() =>
-                    setHorizontalOverlap(resolveOverlapToPixels(horizontalOverlap, strokeCount, strokeWidth))
+                    setHorizontalOverflow(resolveOverflowToPixels(horizontalOverflow, strokeCount, strokeWidth))
                   }
                 />
                 Pixels
               </label>
               <NumericInput
                 value={
-                  typeof horizontalOverlap === 'number'
-                    ? horizontalOverlap
-                    : resolveOverlapToPixels(horizontalOverlap, strokeCount, strokeWidth)
+                  typeof horizontalOverflow === 'number'
+                    ? horizontalOverflow
+                    : resolveOverflowToPixels(horizontalOverflow, strokeCount, strokeWidth)
                 }
-                onChange={setHorizontalOverlap}
-                disabled={typeof horizontalOverlap !== 'number'}
+                onChange={setHorizontalOverflow}
+                disabled={typeof horizontalOverflow !== 'number'}
               />
               <span className="border-demo-overlap-px-suffix">px per side</span>
             </div>

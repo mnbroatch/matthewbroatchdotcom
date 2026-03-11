@@ -1,9 +1,10 @@
 import Section from './Section'
 import { experience } from '../data/experience'
 
-function ExperienceSection() {
+function ExperienceSection(props) {
   return (
     <Section
+      {...props}
       className="section-experience"
       aria-label="Work experience"
       backgroundColor="var(--charcoal-blue)"

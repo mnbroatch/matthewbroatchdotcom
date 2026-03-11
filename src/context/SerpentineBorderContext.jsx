@@ -9,7 +9,7 @@ const defaultState = {
   strokeCount: 5,
   strokeWidth: 14,
   radius: 100,
-  horizontalOverlap: 'halfBorderWidth',
+  horizontalOverflow: 'halfBorderWidth',
   layoutMode: 'content',
   colors: ['#561d25', '#ce8147', '#ecdd7b', '#68b0ab', '#696d7d'],
 }
@@ -36,8 +36,8 @@ export function SerpentineBorderProvider({ children, initialValues }) {
   const [radius, setRadius] = useState(
     initialValues?.radius ?? (initialSmall ? smallScreenOverrides.radius : defaultState.radius)
   )
-  const [horizontalOverlap, setHorizontalOverlap] = useState(
-    initialValues?.horizontalOverlap ?? defaultState.horizontalOverlap
+  const [horizontalOverflow, setHorizontalOverflow] = useState(
+    initialValues?.horizontalOverflow ?? defaultState.horizontalOverflow
   )
   const [layoutMode, setLayoutMode] = useState(
     initialValues?.layoutMode ?? (initialSmall ? smallScreenOverrides.layoutMode : defaultState.layoutMode)
@@ -85,8 +85,8 @@ export function SerpentineBorderProvider({ children, initialValues }) {
       setStrokeWidth,
       radius,
       setRadius,
-      horizontalOverlap,
-      setHorizontalOverlap,
+      horizontalOverflow,
+      setHorizontalOverflow,
       layoutMode,
       setLayoutMode,
       colors,
@@ -95,7 +95,7 @@ export function SerpentineBorderProvider({ children, initialValues }) {
       addColor,
       removeColor,
     }),
-    [strokeCount, strokeWidth, radius, horizontalOverlap, layoutMode, colors, setColorAt, addColor, removeColor]
+    [strokeCount, strokeWidth, radius, horizontalOverflow, layoutMode, colors, setColorAt, addColor, removeColor]
   )
 
   return (

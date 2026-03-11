@@ -1,11 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
 import Section from './Section'
 import BoardGameDemoContent from './BoardGameDemoContent'
+import NpmPackageLink from './NpmPackageLink'
+
+const NPM_BOARD_GAME_ENGINE = 'https://www.npmjs.com/package/board-game-engine'
 
 const BOARD_GAME_SECTION_ID = 'board-game'
 const HEIGHT_TRANSITION_MS = 400
 
-function BoardGameSection() {
+function BoardGameSection(props) {
   const [isDemoExpanded, setIsDemoExpanded] = useState(false)
   const [introHeight, setIntroHeight] = useState(null)
   const [demoHeight, setDemoHeight] = useState(null)
@@ -73,12 +76,14 @@ function BoardGameSection() {
 
   return (
     <Section
+      {...props}
       id={BOARD_GAME_SECTION_ID}
       className="section-board-game"
       aria-label="Board game engine"
       backgroundImage="/bg/boardgame.png"
       backgroundColor="var(--charcoal-blue)"
     >
+      <NpmPackageLink href={NPM_BOARD_GAME_ENGINE} aria-label="board-game-engine on npm" />
       <div
         className="board-game-section-swap"
         style={

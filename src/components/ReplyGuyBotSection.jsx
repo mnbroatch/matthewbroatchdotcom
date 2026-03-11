@@ -2,9 +2,10 @@ import Section from './Section'
 
 const REDDIT_FAQ_URL = 'https://www.reddit.com/user/reply-guy-bot/comments/n9fpva/faq/'
 
-function ReplyGuyBotSection() {
+function ReplyGuyBotSection(props) {
   return (
     <Section
+      {...props}
       className="section-reply-guy-bot"
       aria-label="Reply-guy bot"
       backgroundImage="/bg/widgets.svg"

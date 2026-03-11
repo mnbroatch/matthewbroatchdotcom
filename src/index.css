@@ -26,7 +26,7 @@
   --section-padding-inline: clamp(1.5rem, 6vw, 3rem);
   --serpentine-clearance: 40px;
   --content-max-width: 1000px;
-  /* Space for serpentine border overflow on small screens (match horizontalOverlap/2 in SerpentineBorder.jsx) */
+  /* Space for serpentine border overflow on small screens (match horizontalOverflow/2 in SerpentineBorder.jsx) */
   --serpentine-border-overflow: 20px;
 }
 
@@ -89,7 +89,6 @@ main {
 .section {
   position: relative;
   width: 100%;
-  padding: var(--section-padding-block) max(var(--section-padding-inline), var(--serpentine-clearance));
   overflow: hidden;
   color: #fff;
 }
@@ -121,6 +120,7 @@ main {
 
 .section-inner {
   position: relative;
+  padding: var(--section-padding-block) max(var(--section-padding-inline), var(--serpentine-clearance));
   /* z-index: 2; */
   max-width: var(--content-max-width);
   margin-inline: auto;
@@ -174,6 +174,39 @@ main {
 
 .dialogue-section-end {
   width: 100%;
+}
+
+/* Section npm package link (top right); inset from section padding (--section-npm-inset-* set by Section when using serpentine border) */
+.section-npm-link {
+  position: absolute;
+  top: var(--section-npm-inset-top, 0.5rem);
+  right: var(--section-npm-inset-right, 0.5rem);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  white-space: nowrap;
+  z-index: 5;
+}
+.section-npm-link:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+.section-npm-link__icon {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+.section-npm-link__icon img {
+  display: block;
+  vertical-align: middle;
+}
+
+@media (max-width: 380px) {
+  .section-npm-link {
+    white-space: normal;
+    max-width: 8rem;
+    text-align: right;
+  }
 }
 
 /* Section title (shared) – readable over any section bg */
@@ -480,26 +513,26 @@ main {
 }
 
 /* One-message-at-a-time: only current node visible, single bubble layout */
-.section-dialogue .one-message-dialogue .chat-scroller {
+.section-dialogue .one-message-dialogue:not(.default-node-visible) .chat-scroller {
   display: flex;
   align-items: flex-end;
   background: transparent;
 }
 
-.section-dialogue .one-message-dialogue .chat-scroller__inner {
+.section-dialogue .one-message-dialogue:not(.default-node-visible) .chat-scroller__inner {
   width: 100%;
 }
 
 /* Hide history so it doesn’t take space (only last spacer is current message) */
-.section-dialogue .one-message-dialogue .dialogue-tree__node-spacer:not(:last-of-type) {
+.section-dialogue .one-message-dialogue:not(.default-node-visible) .dialogue-tree__node-spacer:not(:last-of-type) {
   display: none;
 }
 
-.section-dialogue .one-message-dialogue .dialogue-tree__node-spacer {
+.section-dialogue .one-message-dialogue:not(.default-node-visible) .dialogue-tree__node-spacer {
   width: 100%;
 }
 
-.section-dialogue .one-message-dialogue .dialogue-tree__node-wrapper {
+.section-dialogue .one-message-dialogue:not(.default-node-visible) .dialogue-tree__node-wrapper {
   display: flex;
   justify-content: center;
 }
@@ -555,33 +588,38 @@ main {
   box-shadow: 0 4px 14px rgba(96, 225, 224, 0.4);
 }
 
-.section-dialogue .dialogue-tree .chat-scroller {
+.section-dialogue .dialogue-tree-wrapper:not(.default-node-visible) .dialogue-tree .chat-scroller {
   border: none;
   background: transparent;
 }
 
-.section-dialogue .dialogue-tree .chat-scroller__inner {
+.section-dialogue .dialogue-tree-wrapper:not(.default-node-visible) .dialogue-tree .chat-scroller__inner {
   width: 100%;
 }
 
-.section-dialogue .dialogue-tree .dialogue-tree__node-spacer:last-of-type .dialogue-tree__node-wrapper {
+/* Custom node styling: skip when .default-node-visible so that line uses library default styles */
+.section-dialogue .dialogue-tree-wrapper:not(.default-node-visible) .dialogue-tree .dialogue-tree__node-spacer:last-of-type .dialogue-tree__node-wrapper {
   background: transparent;
   border-radius: 12px;
 }
 
-.section-dialogue .dialogue-tree .dialogue-node-choices__choice {
+.section-dialogue .dialogue-tree-wrapper:not(.default-node-visible) .dialogue-tree .dialogue-node-choices__choice {
   border-radius: 8px;
 }
 
-.section-dialogue .dialogue-tree .dialogue-tree__node-spacer:last-of-type .dialogue-node-choices__choice:hover {
+.section-dialogue .dialogue-tree-wrapper:not(.default-node-visible) .dialogue-tree .dialogue-tree__node-spacer:last-of-type .dialogue-node-choices__choice:hover {
   background: var(--pearl-aqua);
   color: #0a0a0a;
   box-shadow: 0 0 12px rgba(96, 225, 224, 0.4);
 }
 
-.section-dialogue .dialogue-tree .dialogue-tree__node-spacer:last-of-type .dialogue-node-choices__choice:active {
+.section-dialogue .dialogue-tree-wrapper:not(.default-node-visible) .dialogue-tree .dialogue-tree__node-spacer:last-of-type .dialogue-node-choices__choice:active {
   background: var(--charcoal-blue);
   color: #fff;
+}
+
+.section-dialogue .dialogue-tree-wrapper.default-node-visible .dialogue-tree {
+  height: 200px;
 }
 
 @keyframes board-game-end-screen-fade-in {
