@@ -2,7 +2,7 @@
   "entities": [
     {
       "name": "mainGrid",
-      "type": "Grid",
+      "entityType": "Grid",
       "width": 3,
       "height": 3
     }
@@ -10,14 +10,14 @@
   "numPlayers": 2,
   "moves": {
     "placePlayerMarker": {
-      "type": "PlaceNew",
+      "moveType": "PlaceNew",
       "entity": {
-        "thatMatches": "isCurrentPlayer"
+        "conditions": "isCurrentPlayer"
       },
       "arguments": {
         "destination": {
-          "thatMatches": [
-            { "type": "Space" },
+          "conditions": [
+            { "entityType": "Space" },
             "isEmpty"
           ],
           "playerChoice": true
@@ -25,7 +25,7 @@
       }
     }
   },
-  "endConditions": [
+  "endIf": [
     {
       "conditions": [{
         "conditionType": "HasLine",
