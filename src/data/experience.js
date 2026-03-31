@@ -1,24 +1,23 @@
-// Professional experience entries: logos, text, links.
 export const experience = [
   {
     id: '1',
-    title: 'Role or project one',
-    description: 'Short description of what you did here.',
-    link: 'https://example.com',
-    logo: '/logos/placeholder.svg',
+    title: 'Application Developer | Pennymac',
+    description: 'Built front-end solutions for brokers, extended REST & GraphQL APIs, and pioneered TypeScript & react-query adoption.',
+    link: 'https://www.pennymac.com',
+    logo: '/logos/pennymac.png',
   },
   {
     id: '2',
-    title: 'Role or project two',
-    description: 'Short description.',
-    link: 'https://example.com',
-    logo: '/logos/placeholder.svg',
+    title: 'Web Developer | BOND',
+    description: 'Created interactive marketing experiences using Vue.js, camera capture, and AWS services.',
+    link: 'https://www.wearebond.com',
+    logo: '/logos/bond.svg',
   },
   {
     id: '3',
-    title: 'Role or project three',
-    description: 'Short description.',
-    link: 'https://example.com',
-    logo: '/logos/placeholder.svg',
+    title: 'Web Developer | Genius Sports',
+    description: 'Contributed to widget-serving architecture with server-side React apps and wrote production-ready, fully tested JS across Java, Scala, and Kotlin stacks.',
+    link: 'https://www.geniussports.com',
+    logo: '/logos/genius-sports.png',
   },
 ]

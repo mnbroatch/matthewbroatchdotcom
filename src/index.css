@@ -165,7 +165,6 @@ main {
 
 .section-blurb {
   margin: 0 0 1rem;
-  max-width: 42ch;
   color: rgba(255, 255, 255, 0.95);
 }
 
@@ -179,7 +178,6 @@ main {
 
 .section-blurb-technical {
   margin: 0;
-  max-width: 50ch;
   font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.85);
   font-style: italic;
@@ -449,7 +447,6 @@ main {
 
 .board-game-blurb {
   margin: 0 0 1rem;
-  max-width: 42ch;
 }
 
 .board-game-modal-cta,
