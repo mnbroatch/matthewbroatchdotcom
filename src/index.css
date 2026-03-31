@@ -773,15 +773,18 @@ main {
   font-size: 0.9rem;
 }
 
-.board-game-end-screen__link {
+.board-game-end-screen__link, .board-game-section__link {
   display: inline-block;
-  margin-top: 0.25rem;
   padding: 0.6rem 1.25rem;
   color: #0a0a0a;
   font-weight: 600;
   text-decoration: none;
   background: var(--pearl-aqua);
   border-radius: 8px;
+}
+
+.board-game-end-screen__link {
+  margin-top: 0.25rem;
 }
 
 .board-game-end-screen__link:hover {

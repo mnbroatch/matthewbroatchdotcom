@@ -1,0 +1,4 @@
+make demo scroll land further down so header doesn't cut off border
+demo and link button alignment
+format my tech blurb bullet points nicely
+

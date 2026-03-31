@@ -130,7 +130,7 @@ function BoardGameDemoContent({ isDemoExpanded = false, onClose }) {
             <div className="board-game-end-screen" aria-live="polite">
               <h2 className="board-game-end-screen__title">Game over</h2>
               <p className="board-game-end-screen__blurb">
-                This demo was built with the same engine you can use at boardgameengine.com — define rules in a special JSON format, get a playable game and online multiplayer in the browser.
+                This demo was built with the same engine you can use at boardgameengine.com — define rules in a special JSON format and automatically get a playable game and online multiplayer in the browser.
               </p>
               <p className="board-game-end-screen__cta-text">
                 Edit this game and play more online:
