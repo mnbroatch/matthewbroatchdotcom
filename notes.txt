@@ -1,7 +1,0 @@
-make demo scroll land further down so header doesn't cut off border
-demo and link button alignment
-format my tech blurb bullet points nicely
-make line breaks function in reply guy section
-work experience cards in the same row should be same height, taking height from largest member.
-make sure svg format makes sense
-center and increase the size of the work experience logos. add a white background color with a colored border around it, with rounded edges. #ecdd7b

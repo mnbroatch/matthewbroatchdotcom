@@ -114,36 +114,46 @@ function BoardGameSection(props) {
             <p className="section-blurb">
               A custom engine for building and testing board games. Rules, pieces, and boards — all in one place.
             </p>
-            <button
-              type="button"
-              className="board-game-cta"
-              onClick={handleDemoClick}
-            >
-              Demo
-            </button>
-            <a
-              href="https://boardgameengine.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="board-game-section__link"
-            >
-              boardgameengine.com
-            </a>
+            <div className="board-game-cta-row">
+              <button
+                type="button"
+                className="board-game-cta"
+                onClick={handleDemoClick}
+              >
+                Demo
+              </button>
+              <a
+                href="https://boardgameengine.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="board-game-section__link"
+              >
+                boardgameengine.com
+              </a>
+            </div>
             <div className="section-technical">
-              <p className="section-blurb-technical">
-                - JSON-driven rules engine with full TypeScript type safety
-                  - Drives game logic declaratively (no hardcoded rules)
-                  - Determines and surfaces valid piece/space interactions in the UI
-                - Thin React UI layer, fully decoupled from business logic
-                - Real-time multiplayer sandbox environment with custom backend
-                  - Game server hosted on EC2
-                  - API Gateway routing all client-server communication
-                  - Clean, user-friendly URL structure for API endpoints
-                  - Authentication via AWS Cognito (Google OIDC)
-                  - Authorized Lambda functions for game/business logic
-                  - Lobby and session state persisted in DynamoDB
-                  - CloudFront CDN serving SPA from private S3 bucket
-              </p>
+              <ul className="section-blurb-technical section-tech-bullets">
+                <li>
+                  JSON-driven rules engine with full TypeScript type safety
+                  <ul>
+                    <li>Drives game logic declaratively (no hardcoded rules)</li>
+                    <li>Determines and surfaces valid piece/space interactions in the UI</li>
+                  </ul>
+                </li>
+                <li>Thin React UI layer, fully decoupled from business logic</li>
+                <li>
+                  Real-time multiplayer sandbox environment with custom backend
+                  <ul>
+                    <li>Game server hosted on EC2</li>
+                    <li>API Gateway routing all client-server communication</li>
+                    <li>Clean, user-friendly URL structure for API endpoints</li>
+                    <li>Authentication via AWS Cognito (Google OIDC)</li>
+                    <li>Authorized Lambda functions for game/business logic</li>
+                    <li>Lobby and session state persisted in DynamoDB</li>
+                    <li>CloudFront CDN serving SPA from private S3 bucket</li>
+                  </ul>
+                </li>
+              </ul>
             </div>
           </div>
         </div>

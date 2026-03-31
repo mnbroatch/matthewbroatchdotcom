@@ -28,8 +28,18 @@
   --content-max-width: 1000px;
   /* Space for serpentine border overflow on small screens (match horizontalOverflow/2 in SerpentineBorder.jsx) */
   --serpentine-border-overflow: 20px;
+  /* Bottom breathing room inside the last section so border measurement (section getBoundingClientRect) matches visible page end */
+  --serpentine-trailing-room: 1.25rem;
+  /* Nudge “available as npm package” slightly higher than section-inner top padding */
+  --section-npm-link-nudge-up: 0.65rem;
   /* Default for Section height animation (overridden per section via inline --section-height-duration) */
   --section-height-duration: 400ms;
+
+  /* Anchor/scroll offset for sticky resume header */
+  --sticky-header-scroll-offset: 96px;
+
+  /* Header palette (reused for accents) */
+  --resume-header-bg: #68b0ab;
 }
 
 /* ===== Base reset ===== */
@@ -46,6 +56,10 @@ body {
   background: var(--page-background);
   color: #1a1a1a;
   line-height: 1.5;
+}
+
+html {
+  scroll-padding-top: var(--sticky-header-scroll-offset);
 }
 
 @media (max-width: 768px) {
@@ -69,7 +83,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 0.75rem var(--section-padding-inline);
-  background-color: #68b0ab;
+  background-color: var(--resume-header-bg);
 }
 
 .resume-header__cta {
@@ -105,6 +119,11 @@ main {
   text-align: left;
 }
 
+/* Padding on the last <section> (not margin on body/main): SerpentineBorder measures direct child sections. */
+.serpentine-wrapper > .section:last-child {
+  padding-bottom: var(--serpentine-trailing-room);
+}
+
 /* Serpentine SVG: avoid top/width/height here — package sets inline; a stylesheet height wins when inline is cleared mid-transition and breaks the path. */
 .serpentine-border-svg {
   pointer-events: none;
@@ -118,6 +137,7 @@ main {
   width: 100%;
   overflow: hidden;
   color: #fff;
+  scroll-margin-top: var(--sticky-header-scroll-offset);
 }
 
 .section-bg {
@@ -168,6 +188,10 @@ main {
   color: rgba(255, 255, 255, 0.95);
 }
 
+.section-blurb--preline {
+  white-space: pre-line;
+}
+
 .section-technical {
   margin-top: auto;
   margin-bottom: 0;
@@ -183,6 +207,28 @@ main {
   font-style: italic;
 }
 
+.section-tech-bullets {
+  list-style: disc;
+  padding-left: 1.25rem;
+  text-align: left;
+}
+
+.section-tech-bullets > li + li {
+  margin-top: 0.5rem;
+}
+
+.section-tech-bullets ul {
+  list-style: circle;
+  margin: 0.35rem 0 0;
+  padding-left: 1.25rem;
+  font-style: italic;
+  opacity: 0.95;
+}
+
+.section-tech-bullets ul > li + li {
+  margin-top: 0.25rem;
+}
+
 .section-blurb-technical a {
   color: var(--pearl-aqua);
   text-decoration: none;
@@ -190,6 +236,10 @@ main {
 
 .section-blurb-technical a:hover {
   text-decoration: underline;
+}
+
+.section-blurb-technical--preline {
+  white-space: pre-line;
 }
 
 .section-technical-links {
@@ -207,6 +257,21 @@ main {
   text-decoration: underline;
 }
 
+.section-dialogue .section-technical-links__github {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  vertical-align: top;
+}
+
+.section-dialogue .section-technical-links__github-mark {
+  width: 0.95em;
+  height: 0.95em;
+  flex-shrink: 0;
+  opacity: 0.95;
+  transform: translateY(.11em);
+}
+
 /* Tech specs block under last dialogue line (inside custom node) */
 .section-dialogue .one-message-node__tech-specs {
   margin-top: 0.75rem;
@@ -217,7 +282,7 @@ main {
 /* Section npm package link (top right); inset from section padding (--section-npm-inset-* set by Section when using serpentine border) */
 .section-npm-link {
   position: absolute;
-  top: var(--section-npm-inset-top, 0.5rem);
+  top: calc(var(--section-npm-inset-top, 0.5rem) - var(--section-npm-link-nudge-up));
   right: var(--section-npm-inset-right, 0.5rem);
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.85);
@@ -270,17 +335,38 @@ main {
   margin-bottom: 1.5rem;
 }
 
+.section-experience__contact {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.95);
+  text-align: center;
+}
+
+.section-experience__email {
+  color: var(--pearl-aqua);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.section-experience__email:hover {
+  text-decoration: underline;
+}
+
 .experience-card {
   margin: 0;
+  height: 100%;
 }
 
 .experience-card__link {
-  display: block;
   padding: 1.25rem;
   background: rgba(255, 255, 255, 0.15);
   border-radius: 12px;
   text-decoration: none;
   color: inherit;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .experience-card__link:hover {
@@ -288,11 +374,28 @@ main {
 }
 
 .experience-card__logo {
-  display: block;
-  width: 64px;
-  height: 64px;
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 92px;
+  padding: 12px;
   object-fit: contain;
+  flex-shrink: 0;
   margin-bottom: 0.75rem;
+  background: #fff;
+  border: 2px solid var(--resume-header-bg);
+  border-radius: 18px;
+}
+
+.experience-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 0;
+  width: 100%;
 }
 
 .experience-card__title {
@@ -437,7 +540,7 @@ main {
 
 /* Board game section: intro and demo swap with measured height transition (serpentine border follows via ResizeObserver) */
 .section-board-game {
-  scroll-margin-top: 50px;
+  scroll-margin-top: var(--sticky-header-scroll-offset);
 }
 
 .section-board-game .section-bg__ghost {
@@ -462,6 +565,35 @@ main {
   text-decoration: none;
 }
 
+.board-game-cta-row {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.board-game-cta-row .board-game-cta,
+.board-game-cta-row .board-game-section__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0.65rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  line-height: 1.2;
+  min-height: 2.75rem;
+  box-sizing: border-box;
+}
+
+.board-game-cta-row .board-game-cta {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
 .section-cta-link:hover {
   background: var(--lavender);
 }
@@ -479,10 +611,6 @@ main {
 
 .board-game-cta:hover {
   background: var(--lavender);
-}
-
-.section-board-game .board-game-cta {
-  margin-bottom: 1.5rem;
 }
 
 .board-game-section-swap {

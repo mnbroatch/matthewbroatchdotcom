@@ -71,10 +71,10 @@ function BorderDemoSection(props) {
     <Section {...props} className="section-border-demo" backgroundColor="var(--charcoal-blue)">
       <NpmPackageLink href={NPM_SERPENTINE_BORDER} aria-label="serpentine-border on npm" />
       <h2 className="section-title">Serpentine border</h2>
-      <p className="section-blurb">
-        Like the groovy border snaking through this site? Use it in your own projects via the npm package, which includes the vanilla JS curve calculator and a lightweight optional react component.
+      <p className="section-blurb section-blurb--preline">
+        {`Like the groovy border snaking through this site? Use it in your own projects via the npm package, which includes the vanilla JS curve calculator and a lightweight optional react component.
 
-        Tweak the values below to try out its customization features. Go wild! Add strokes until the page crashes! Make their width so big it covers the whole screen! Why not a radius of 2000? What do negative numbers do?
+Tweak the values below to try out its customization features. Go wild! Add strokes until the page crashes! Make their width so big it covers the whole screen! Why not a radius of 2000? What do negative numbers do?`}
       </p>
       <div className="border-demo-controls">
         <label className="border-demo-label">
