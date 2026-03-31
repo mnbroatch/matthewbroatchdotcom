@@ -1,10 +1,18 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Editor from '@monaco-editor/react'
 import { Game, useGameserverConnection } from 'board-game-engine-react'
 
 import ticTacToeRules from '../tic-tac-toe.json'
 
-function BoardGameDemoContent({ onClose }) {
+function resetGameSession(conn) {
+  if (!conn || typeof conn.reset !== 'function') return
+  if (conn.client && typeof conn.client.reset === 'function') {
+    conn.client.reset()
+  }
+  conn.reset()
+}
+
+function BoardGameDemoContent({ isDemoExpanded = false, onClose }) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isOver, setIsOver] = useState(false)
 
@@ -15,11 +23,65 @@ function BoardGameDemoContent({ onClose }) {
     singlePlayer: true,
   })
 
+  const gameConnectionRef = useRef(gameConnection)
+  gameConnectionRef.current = gameConnection
+
+  const wasDemoExpandedRef = useRef(false)
+  useEffect(() => {
+    if (!isDemoExpanded) {
+      wasDemoExpandedRef.current = false
+      return
+    }
+    if (wasDemoExpandedRef.current) return
+    wasDemoExpandedRef.current = true
+
+    setIsPlaying(false)
+    setIsOver(false)
+
+    let cancelled = false
+    let frames = 0
+    const maxFrames = 120
+
+    const runReset = () => {
+      if (cancelled) return
+      const conn = gameConnectionRef.current
+      const ready =
+        conn &&
+        typeof conn.reset === 'function' &&
+        conn.client &&
+        typeof conn.client.reset === 'function'
+      if (ready) {
+        resetGameSession(conn)
+        return
+      }
+      frames += 1
+      if (frames < maxFrames) {
+        requestAnimationFrame(runReset)
+      } else if (conn && typeof conn.reset === 'function') {
+        resetGameSession(conn)
+      }
+    }
+    requestAnimationFrame(runReset)
+    return () => {
+      cancelled = true
+    }
+  }, [isDemoExpanded])
+
   useEffect(() => {
     if (!gameConnection.gameover) return
     const t = setTimeout(() => setIsOver(true), 1000)
     return () => clearTimeout(t)
   }, [gameConnection.gameover])
+
+  function handleClose() {
+    onClose?.()
+  }
+
+  function handleBeginPlay() {
+    resetGameSession(gameConnection)
+    setIsOver(false)
+    setIsPlaying(true)
+  }
 
   return (
     <div className="board-game-demo-content">
@@ -27,7 +89,7 @@ function BoardGameDemoContent({ onClose }) {
         <button
           type="button"
           className="board-game-demo-close"
-          onClick={onClose}
+          onClick={handleClose}
           aria-label="Close demo"
         >
           ×
@@ -50,16 +112,14 @@ function BoardGameDemoContent({ onClose }) {
               readOnly: true,
             }}
           />
-          <h2>
-            Becomes…
-            <button
-              type="button"
-              className="board-game-modal-cta"
-              onClick={() => setIsPlaying(true)}
-            >
-              Continue to Play
-            </button>
-          </h2>
+          <h2 className="board-game-demo-becomes-heading">Becomes…</h2>
+          <button
+            type="button"
+            className="board-game-modal-cta board-game-demo-play-cta"
+            onClick={handleBeginPlay}
+          >
+            Continue to Play
+          </button>
         </>
       )}
       {isPlaying && (

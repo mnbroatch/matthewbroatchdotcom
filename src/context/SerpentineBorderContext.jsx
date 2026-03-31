@@ -44,22 +44,26 @@ export function SerpentineBorderProvider({ children, initialValues }) {
   )
   const [colors, setColors] = useState(initialValues?.colors ?? defaultState.colors)
 
+  const applyFromMatches = useCallback((matches) => {
+    if (matches) {
+      setStrokeWidth(smallScreenOverrides.strokeWidth)
+      setRadius(smallScreenOverrides.radius)
+      setLayoutMode(smallScreenOverrides.layoutMode)
+    } else {
+      setStrokeWidth(defaultState.strokeWidth)
+      setRadius(defaultState.radius)
+      setLayoutMode(defaultState.layoutMode)
+    }
+  }, [])
+
   useEffect(() => {
     if (!smallMedia) return
-    const applyBreakpoint = (e) => {
-      if (e.matches) {
-        setStrokeWidth(smallScreenOverrides.strokeWidth)
-        setRadius(smallScreenOverrides.radius)
-        setLayoutMode(smallScreenOverrides.layoutMode)
-      } else {
-        setStrokeWidth(defaultState.strokeWidth)
-        setRadius(defaultState.radius)
-        setLayoutMode(defaultState.layoutMode)
-      }
+    const onBreakpointChange = (e) => {
+      applyFromMatches(e.matches)
     }
-    smallMedia.addEventListener('change', applyBreakpoint)
-    return () => smallMedia.removeEventListener('change', applyBreakpoint)
-  }, [])
+    smallMedia.addEventListener('change', onBreakpointChange)
+    return () => smallMedia.removeEventListener('change', onBreakpointChange)
+  }, [applyFromMatches])
 
   const setColorAt = useCallback((index, value) => {
     setColors((prev) => {

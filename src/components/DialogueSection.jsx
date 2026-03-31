@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import DialogueTree from 'react-dialogue-tree'
 import Section from './Section'
 import OneMessageNode from './OneMessageNode'
@@ -10,14 +10,55 @@ const YARNBOUND_GITHUB = 'https://github.com/mnbroatch/bondage'
 const REACT_DIALOGUE_TREE_GITHUB = 'https://github.com/mnbroatch/react-dialogue-tree'
 const NPM_REACT_DIALOGUE_TREE = 'https://www.npmjs.com/package/react-dialogue-tree'
 
+/** Shown below the last dialogue line (no advance button). */
+function LandingDialogueTechSpecs() {
+  return (
+    <div className="section-technical one-message-node__tech-specs">
+      <p className="section-blurb-technical">
+        Yarn Language JavaScript Interpreter. Uses Jison parser generator.
+      </p>
+      <p className="section-technical-links">
+        <a href={YARNBOUND_GITHUB} target="_blank" rel="noopener noreferrer">Bondage.js (YarnBound)</a>
+        {' · '}
+        <a href={REACT_DIALOGUE_TREE_GITHUB} target="_blank" rel="noopener noreferrer">react-dialogue-tree</a>
+      </p>
+    </div>
+  )
+}
+
+function makeOneMessageNode(displayVariant, yarnSnippet) {
+  function BoundOneMessageNode(props) {
+    return (
+      <OneMessageNode
+        {...props}
+        displayVariant={displayVariant}
+        yarnSnippet={yarnSnippet}
+        TechSpecsFooter={LandingDialogueTechSpecs}
+      />
+    )
+  }
+  return BoundOneMessageNode
+}
+
 function DialogueSection(props) {
-  const [dialogueEnded, setDialogueEnded] = useState(false)
   const [useCustomNode, setUseCustomNode] = useState(true)
+  const [displayVariant, setDisplayVariant] = useState('custom')
 
   const handleCommand = useCallback((result) => {
-    if (result.command === 'useDefaultNode') setUseCustomNode(false)
-    if (result.command === 'useCustomNode') setUseCustomNode(true)
+    const cmd = result.command
+    if (cmd === 'useDefaultNode') setUseCustomNode(false)
+    if (cmd === 'useCustomNode') {
+      setUseCustomNode(true)
+      setDisplayVariant('custom')
+    }
+    if (cmd === 'useYarnCodeNode') setDisplayVariant('yarnCode')
+    if (cmd === 'useWavyNode') setDisplayVariant('wavy')
   }, [])
+
+  const CustomNode = useMemo(
+    () => makeOneMessageNode(displayVariant, landingDialogue),
+    [displayVariant]
+  )
 
   return (
     <Section
@@ -28,35 +69,19 @@ function DialogueSection(props) {
       backgroundColor="var(--sand)"
     >
       <NpmPackageLink href={NPM_REACT_DIALOGUE_TREE} aria-label="react-dialogue-tree on npm" />
-      {!dialogueEnded ? (
-        <div
-          className={`dialogue-tree-wrapper one-message-dialogue${!useCustomNode ? ' default-node-visible' : ''}`}
-        >
-          <DialogueTree
-            dialogue={landingDialogue}
-            startAt="Start"
-            defaultOption="Continue"
-            finalOption="Begin"
-            onDialogueEnd={() => setDialogueEnded(true)}
-            combineTextAndOptionsResults={false}
-            handleCommand={handleCommand}
-            customNode={useCustomNode ? OneMessageNode : undefined}
-          />
-        </div>
-      ) : (
-        <div className="dialogue-section-end">
-          <div className="section-technical">
-            <p className="section-blurb-technical">
-              Yarn Language dialogue, powered by Bondage.js and react-dialogue-tree.
-            </p>
-            <p className="section-technical-links">
-              <a href={YARNBOUND_GITHUB} target="_blank" rel="noopener noreferrer">Bondage.js (YarnBound)</a>
-              {' · '}
-              <a href={REACT_DIALOGUE_TREE_GITHUB} target="_blank" rel="noopener noreferrer">react-dialogue-tree</a>
-            </p>
-          </div>
-        </div>
-      )}
+      <div
+        className={`dialogue-tree-wrapper one-message-dialogue${!useCustomNode ? ' default-node-visible' : ''}`}
+      >
+        <DialogueTree
+          dialogue={landingDialogue}
+          startAt="Start"
+          defaultOption="Continue"
+          finalOption="Begin"
+          combineTextAndOptionsResults
+          handleCommand={handleCommand}
+          customNode={useCustomNode ? CustomNode : undefined}
+        />
+      </div>
     </Section>
   )
 }

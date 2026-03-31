@@ -28,6 +28,8 @@
   --content-max-width: 1000px;
   /* Space for serpentine border overflow on small screens (match horizontalOverflow/2 in SerpentineBorder.jsx) */
   --serpentine-border-overflow: 20px;
+  /* Default for Section height animation (overridden per section via inline --section-height-duration) */
+  --section-height-duration: 400ms;
 }
 
 /* ===== Base reset ===== */
@@ -58,6 +60,34 @@ body {
   text-align: center;
 }
 
+/* ===== Resume header (top bar) ===== */
+.resume-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem var(--section-padding-inline);
+  background-color: #68b0ab;
+}
+
+.resume-header__cta {
+  display: inline-block;
+  padding: 0.6rem 1.25rem;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0a0a0a;
+  background: var(--pearl-aqua);
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.resume-header__cta:hover {
+  background: var(--lavender);
+}
+
 main {
   max-width: var(--content-max-width);
   margin-inline: auto;
@@ -75,15 +105,12 @@ main {
   text-align: left;
 }
 
+/* Serpentine SVG: avoid top/width/height here — package sets inline; a stylesheet height wins when inline is cleared mid-transition and breaks the path. */
 .serpentine-border-svg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
   pointer-events: none;
-  overflow: visible;
   z-index: 10;
+  /* Subpixel nudge: aligns top raster edge to device pixels (fixes thin seam); not related to preserveAspectRatio */
+  transform: translateY(-0.5px);
 }
 
 .section {
@@ -124,6 +151,16 @@ main {
   /* z-index: 2; */
   max-width: var(--content-max-width);
   margin-inline: auto;
+}
+
+/* Generic height transition: shell clips during animation; measure node supplies scrollHeight for ResizeObserver */
+.section-inner__height-shell {
+  overflow: hidden;
+}
+
+.section-inner__measure {
+  display: block;
+  width: 100%;
 }
 
 .section-blurb {
@@ -172,8 +209,11 @@ main {
   text-decoration: underline;
 }
 
-.dialogue-section-end {
+/* Tech specs block under last dialogue line (inside custom node) */
+.section-dialogue .one-message-node__tech-specs {
+  margin-top: 0.75rem;
   width: 100%;
+  box-sizing: border-box;
 }
 
 /* Section npm package link (top right); inset from section padding (--section-npm-inset-* set by Section when using serpentine border) */
@@ -226,6 +266,10 @@ main {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 1.5rem;
+}
+
+.section-experience .experience-grid {
+  margin-bottom: 1.5rem;
 }
 
 .experience-card {
@@ -393,7 +437,7 @@ main {
   cursor: not-allowed;
 }
 
-/* Board game section */
+/* Board game section: intro and demo swap with measured height transition (serpentine border follows via ResizeObserver) */
 .section-board-game {
   scroll-margin-top: 50px;
 }
@@ -440,9 +484,14 @@ main {
   background: var(--lavender);
 }
 
-/* Board game section: intro and demo swap with one fluid height transition */
+.section-board-game .board-game-cta {
+  margin-bottom: 1.5rem;
+}
+
 .board-game-section-swap {
-  /* height and overflow set by JS for measured transition */
+  display: flex;
+  flex-direction: column;
+  /* height, overflow, transition set inline for measured transition */
 }
 
 .board-game-section-row {
@@ -451,6 +500,15 @@ main {
 
 .board-game-section-row-inner {
   /* content drives natural height for measurement */
+}
+
+.board-game-demo-becomes-heading {
+  margin: 1rem 0 0;
+  font-size: 1.25rem;
+}
+
+.board-game-demo-play-cta {
+  margin-top: 1rem;
 }
 
 .board-game-demo-content {
@@ -542,6 +600,55 @@ main {
   max-width: 420px;
 }
 
+.section-dialogue .one-message-node--yarn {
+  max-width: min(100%, 540px);
+}
+
+/* Sample Yarn source shown after <<useYarnCodeNode>> */
+.section-dialogue .one-message-node__yarn {
+  margin: 0 0 1rem;
+  padding: 1rem 1.1rem;
+  max-height: min(50vh, 260px);
+  overflow: auto;
+  text-align: left;
+  font-family: ui-monospace, 'Cascadia Code', 'Segoe UI Mono', Menlo, Monaco, monospace;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: #e4f4f3;
+  background: rgba(10, 18, 28, 0.78);
+  border: 1px solid rgba(96, 225, 224, 0.28);
+  border-radius: 10px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.section-dialogue .one-message-node__yarn code {
+  font: inherit;
+  white-space: pre;
+  word-break: break-word;
+}
+
+.section-dialogue .one-message-node .dialogue-node__option:not(.dialogue-node__option--default):not(.dialogue-node__option--final) {
+  padding: 0.55rem 1rem;
+  font-family: var(--font-dialogue);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0a0a0a;
+  background: var(--pearl-aqua);
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.section-dialogue .one-message-node .dialogue-node__option:not(.dialogue-node__option--default):not(.dialogue-node__option--final):hover {
+  box-shadow: 0 4px 14px rgba(96, 225, 224, 0.4);
+}
+
+.section-dialogue .one-message-node .dialogue-node__option--disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .section-dialogue .section-bg {
   /* transform: translateY(15px); */
 }
@@ -557,23 +664,21 @@ main {
   color: #fff;
 }
 
-/* Continue/End button: button-y, right-aligned */
+/* Continue/End and choice rows: centered, same flex layout as multi-option */
 .section-dialogue .one-message-node .dialogue-node__options {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
 .section-dialogue .one-message-node .dialogue-node__option--default,
 .section-dialogue .one-message-node .dialogue-node__option--final {
-  padding: 0.6rem 1.25rem;
-  position: absolute;
-  right: 1rem;
-  bottom: 1rem;
-  font-size: 1rem;
+  padding: 0.55rem 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: #0a0a0a;
   background: var(--pearl-aqua);

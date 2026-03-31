@@ -68,9 +68,7 @@ function BoardGameSection(props) {
   }
 
   const containerHeight =
-    isDemoExpanded
-      ? (demoHeight ?? introHeight ?? undefined)
-      : introHeight ?? undefined
+    isDemoExpanded ? (demoHeight ?? introHeight ?? undefined) : (introHeight ?? undefined)
 
   const showMeasuredHeight = containerHeight != null
 
@@ -82,6 +80,7 @@ function BoardGameSection(props) {
       aria-label="Board game engine"
       backgroundImage="/bg/boardgame.png"
       backgroundColor="var(--charcoal-blue)"
+      animateHeight={false}
     >
       <NpmPackageLink href={NPM_BOARD_GAME_ENGINE} aria-label="board-game-engine on npm" />
       <div
@@ -112,7 +111,7 @@ function BoardGameSection(props) {
         >
           <div className="board-game-section-row-inner">
             <h2 className="section-title">Board game engine</h2>
-            <p className="board-game-blurb">
+            <p className="section-blurb">
               A custom engine for building and testing board games. Rules, pieces, and boards — all in one place.
             </p>
             <button
@@ -144,7 +143,10 @@ function BoardGameSection(props) {
           }
         >
           <div className="board-game-section-row-inner">
-            <BoardGameDemoContent onClose={handleCloseDemo} />
+            <BoardGameDemoContent
+              isDemoExpanded={isDemoExpanded}
+              onClose={handleCloseDemo}
+            />
           </div>
         </div>
       </div>
