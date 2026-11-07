@@ -13,7 +13,7 @@ function MusicSection(props) {
     >
       <h2 className="section-title">Music</h2>
       <p className="section-blurb">
-        Music and tracks on ReverbNation.
+        Music on ReverbNation.
       </p>
       <a
         href={REVERBNATION_URL}
