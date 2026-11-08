@@ -17,7 +17,7 @@ function BoardGameDemoContent({ isDemoExpanded = false, onClose }) {
   const [isOver, setIsOver] = useState(false)
 
   const gameConnection = useGameserverConnection({
-    gameRules: ticTacToeRules,
+    gameRules: JSON.stringify(ticTacToeRules),
     numPlayers: 2,
     debug: false,
     singlePlayer: true,
