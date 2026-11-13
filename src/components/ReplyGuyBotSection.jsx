@@ -13,7 +13,7 @@ function ReplyGuyBotSection(props) {
       {...props}
       className="section-reply-guy-bot"
       aria-label="Reply-guy bot"
-      backgroundImage="/bg/widgets.svg"
+      backgroundImage="/bg/beep.png"
       backgroundColor="var(--cherry-rose)"
     >
       <h2 className="section-title">reddit reply-guy-bot</h2>

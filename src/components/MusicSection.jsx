@@ -8,7 +8,7 @@ function MusicSection(props) {
       {...props}
       className="section-music"
       aria-label="Music"
-      backgroundImage="/bg/more.svg"
+      backgroundImage="/bg/music.png"
       backgroundColor="var(--golden-apricot)"
     >
       <h2 className="section-title">Music</h2>
