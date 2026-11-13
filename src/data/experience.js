@@ -16,7 +16,7 @@ export const experience = [
   {
     id: '3',
     title: 'Web Developer | Genius Sports',
-    description: 'Contributed to widget-serving architecture with server-side React apps and wrote production-ready, fully tested JS across Java, Scala, and Kotlin stacks.',
+    description: 'Built widget-serving architecture in Node for sports scoreboards and advertisements and contributed to architecture across Java, Scala, and Kotlin stacks.',
     link: 'https://www.geniussports.com',
     logo: '/logos/genius-sports.png',
   },
